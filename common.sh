@@ -837,6 +837,9 @@ if [[ -d "${GITHUB_WORKSPACE}/OP_DIY" ]]; then
   
 elif [[ ${matrixtarget} == "nanopi_r2s" ]]; then
   cp -Rf $HOME_PATH/build/common/nanopi_r2s/* $BUILD_PATH
+
+elif [[ ${matrixtarget} == "nanopi_r2c" ]]; then
+  cp -Rf $HOME_PATH/build/common/nanopi_r2c/* $BUILD_PATH
   
 elif [[ ${matrixtarget} == "nanopi_r4s" ]]; then
   cp -Rf $HOME_PATH/build/common/nanopi_r4s/* $BUILD_PATH 
