@@ -333,7 +333,7 @@ if [[ -f $BUILD_PATH/openwrt.sh ]]; then
   echo "正在执行：给固件增加[openwrt]命令"
   [[ ! -d "$BASE_PATH/bin" ]] && mkdir $BASE_PATH/bin
   cp -Rf $BUILD_PATH/openwrt.sh $BASE_PATH/bin/openwrt
-  chmod 777 $BASE_PATH/usr/bin/openwrt
+  chmod 777 $BASE_PATH/bin/openwrt
 fi
 
 if [[ -f $BUILD_PATH/tools.sh ]]; then
