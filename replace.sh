@@ -3,7 +3,6 @@
 #!/bin/bash
 # https://github.com/shidahuilang/openwrt
 # common Module by 大灰狼
-# matrix.target=${Modelfile}
 #====================================================
 
 # 字体颜色配置
