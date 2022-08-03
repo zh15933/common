@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
+
 #====================================================
-#!/bin/bash
-# https://github.com/shidahuilang/openwrt
-# common Module by 大灰狼
-# matrix.target=${Modelfile}
+#	Author:	dahuilang
+#	Dscription: openwrt onekey Management
+#	github: https://github.com/shidahuilang/openwrt
 #====================================================
 
 # 字体颜色配置

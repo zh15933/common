@@ -1,8 +1,6 @@
-#!/usr/bin/env bash
-#====================================================
 #!/bin/bash
 # https://github.com/shidahuilang/openwrt
-# common Module by 大灰狼
+# common Module by shidahuilang
 # matrix.target=${matrixtarget}
 
 function TIME() {
@@ -335,7 +333,6 @@ if [[ -f $BUILD_PATH/openwrt.sh ]]; then
   cp -Rf $BUILD_PATH/openwrt.sh $BASE_PATH/usr/bin/openwrt
   chmod 777 $BASE_PATH/usr/bin/openwrt
 fi
-
 if [[ -f $BUILD_PATH/tools.sh ]]; then
   echo "正在执行：给固件增加[tools]命令"
   [[ ! -d "$BASE_PATH/usr/bin" ]] && mkdir $BASE_PATH/usr/bin
@@ -350,6 +347,7 @@ if [[ -f $BUILD_PATH/qinglong.sh ]]; then
   chmod 777 $BASE_PATH/usr/bin/qinglong
 fi
 }
+
 function Diy_Lede() {
 echo "正在执行：Lede专用自定义"
 cat >>"${KEEPD}" <<-EOF
@@ -391,9 +389,11 @@ sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
 echo "DISTRIB_REVISION='21.02'" >> /etc/openwrt_release
 sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
 echo "DISTRIB_DESCRIPTION='OpenWrt '" >> /etc/openwrt_release
+
 sed -i '/luciname/d' /usr/lib/lua/luci/version.lua
 sed -i '/luciversion/d' /usr/lib/lua/luci/version.lua
 echo "luciname    = \"Immortalwrt-21.02\"" >> /usr/lib/lua/luci/version.lua
+
 exit 0
 EOF
 
@@ -454,6 +454,7 @@ sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
 echo "DISTRIB_REVISION='immortalwrt-18.06'" >> /etc/openwrt_release
 sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
 echo "DISTRIB_DESCRIPTION='OpenWrt '" >> /etc/openwrt_release
+
 exit 0
 EOF
 }
@@ -838,7 +839,7 @@ if [[ -d "${GITHUB_WORKSPACE}/OP_DIY" ]]; then
   cp -Rf $HOME_PATH/build/common/${SOURCE}/* $BUILD_PATH
   cp -Rf ${GITHUB_WORKSPACE}/OP_DIY/${matrixtarget}/* $BUILD_PATH
   
-elif [[ ${matrixtarget} == "nanopi_r2s" ]]; then
+  elif [[ ${matrixtarget} == "nanopi_r2s" ]]; then
   cp -Rf $HOME_PATH/build/common/nanopi_r2s/* $BUILD_PATH
 
 elif [[ ${matrixtarget} == "nanopi_r2c" ]]; then
@@ -846,9 +847,6 @@ elif [[ ${matrixtarget} == "nanopi_r2c" ]]; then
   
 elif [[ ${matrixtarget} == "nanopi_r4s" ]]; then
   cp -Rf $HOME_PATH/build/common/nanopi_r4s/* $BUILD_PATH 
-  
-elif [[ ${matrixtarget} == "openwrt_amlogic" ]]; then
-  cp -Rf $HOME_PATH/build/common/openwrt_amlogic/* $BUILD_PATH   
 else
   cp -Rf $HOME_PATH/build/common/${SOURCE}/* $BUILD_PATH
 fi
@@ -1016,7 +1014,7 @@ function Diy_xinxi() {
 Plug_in="$(grep -i 'CONFIG_PACKAGE_luci-app' $HOME_PATH/.config && grep -i 'CONFIG_PACKAGE_luci-theme' $HOME_PATH/.config)"
 Plug_in2="$(echo "${Plug_in}" | grep -v '^#' |sed '/INCLUDE/d' |sed '/=m/d' |sed '/_Transparent_Proxy/d' |sed '/qbittorrent_static/d' |sed 's/CONFIG_PACKAGE_//g' |sed 's/=y//g' |sed 's/^/、/g' |sed 's/$/\"/g' |awk '$0=NR$0' |sed 's/^/TIME g \"       /g')"
 echo "${Plug_in2}" >Plug-in
-sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1
+sed -i '/luci-app-qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1
 CPUNAME="$(cat /proc/cpuinfo |grep 'model name' |awk 'END {print}' |cut -f2 -d: |sed 's/^[ ]*//g')"
 CPUCORES="$(cat /proc/cpuinfo | grep 'cpu cores' |awk 'END {print}' | cut -f2 -d: | sed 's/^[ ]*//g')"
 
