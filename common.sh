@@ -331,27 +331,25 @@ sed -i '/^$/d' "$HOME_PATH/feeds.conf.default"
 function sbin_openwrt() {
 if [[ -f $BUILD_PATH/openwrt.sh ]]; then
   echo "正在执行：给固件增加[openwrt]命令"
-  [[ ! -d "$BASE_PATH/bin" ]] && mkdir $BASE_PATH/bin
-  cp -Rf $BUILD_PATH/openwrt.sh $BASE_PATH/bin/openwrt
-  chmod 777 $BASE_PATH/bin/openwrt
+  [[ ! -d "$BASE_PATH/usr/bin" ]] && mkdir $BASE_PATH/usr/bin
+  cp -Rf $BUILD_PATH/openwrt.sh $BASE_PATH/usr/bin/openwrt
+  chmod 777 $BASE_PATH/usr/bin/openwrt
 fi
 
 if [[ -f $BUILD_PATH/tools.sh ]]; then
   echo "正在执行：给固件增加[tools]命令"
-  [[ ! -d "$BASE_PATH/bin" ]] && mkdir $BASE_PATH/bin
-  cp -Rf $BUILD_PATH/tools.sh $BASE_PATH/bin/tools
-  chmod 777 $BASE_PATH/bin/tools
+  [[ ! -d "$BASE_PATH/usr/bin" ]] && mkdir $BASE_PATH/usr/bin
+  cp -Rf $BUILD_PATH/tools.sh $BASE_PATH/usr/bin/tools
+  chmod 777 $BASE_PATH/usr/bin/tools
 fi
 
 if [[ -f $BUILD_PATH/qinglong.sh ]]; then
   echo "正在执行：给固件增加[qinglong]命令"
-  [[ ! -d "$BASE_PATH/bin" ]] && mkdir $BASE_PATH/bin
-  cp -Rf $BUILD_PATH/qinglong.sh $BASE_PATH/bin/qinglong
-  chmod 777 $BASE_PATH/bin/qinglong
+  [[ ! -d "$BASE_PATH/usr/bin" ]] && mkdir $BASE_PATH/usr/bin
+  cp -Rf $BUILD_PATH/qinglong.sh $BASE_PATH/usr/bin/qinglong
+  chmod 777 $BASE_PATH/usr/bin/qinglong
 fi
-
 }
-
 function Diy_Lede() {
 echo "正在执行：Lede专用自定义"
 cat >>"${KEEPD}" <<-EOF
