@@ -134,6 +134,24 @@ echo "Tongzhi_Date=$(date +%Y年%m月%d日)" >> $GITHUB_ENV
 echo "Gujian_Date=$(date +%m%d)" >> $GITHUB_ENV
 
 
+function Diy_variable() {
+cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
+echo "HOME_PATH=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
+echo "BUILD_PATH=${GITHUB_WORKSPACE}/openwrt/build/${matrixtarget}" >> $GITHUB_ENV
+echo "BASE_PATH=${GITHUB_WORKSPACE}/openwrt/package/base-files/files" >> $GITHUB_ENV
+echo "NETIP=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/networkip" >> $GITHUB_ENV
+echo "DELETE=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/deletefile" >> $GITHUB_ENV
+echo "FIN_PATH=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/FinishIng.sh" >> $GITHUB_ENV
+echo "KEEPD=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/lib/upgrade/keep.d/base-files-essential" >> $GITHUB_ENV
+echo "AMLOGIC_SH_PATH=${GITHUB_WORKSPACE}/openwrt/amlogic_openwrt" >> $GITHUB_ENV
+echo "CLEAR_PATH=${GITHUB_WORKSPACE}/openwrt/Clear" >> $GITHUB_ENV
+echo "Upgrade_Date=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+echo "Firmware_Date=$(date +%Y-%m%d-%H%M)" >> $GITHUB_ENV
+echo "Compte_Date=$(date +%Y年%m月%d号%H时%M分)" >> $GITHUB_ENV
+echo "Tongzhi_Date=$(date +%Y年%m月%d日)" >> $GITHUB_ENV
+echo "Gujian_Date=$(date +%m%d)" >> $GITHUB_ENV
+
+
 # github用的变量，如果有修改，下面Bendi_variable也要同步修改
 
 if [[ "${REPO_BRANCH}" == "master" ]]; then
@@ -266,6 +284,55 @@ openwrt-21.02)
 ;;
 esac
 }
+
+function Diy_conf() {
+case "${REPO_BRANCH}" in
+master)
+  
+  # 给固件LUCI做个标记
+  sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
+  echo -e "\nDISTRIB_RECOGNIZE='18'" >> "$BASE_PATH/etc/openwrt_release" && sed -i '/^\s*$/d' "$BASE_PATH/etc/openwrt_release"
+
+;;
+22.03)
+  
+  # 给固件LUCI做个标记
+  sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
+  echo -e "\nDISTRIB_RECOGNIZE='20'" >> "$BASE_PATH/etc/openwrt_release" && sed -i '/^\s*$/d' "$BASE_PATH/etc/openwrt_release"
+  
+  # 给源码增加passwall为默认自选
+  sed  -i  's/ luci-app-passwall//g' target/linux/*/Makefile
+  sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-passwall?g' target/linux/*/Makefile
+  
+  # 修改DISTRIB_DESCRIPTION
+  DISTRIB="$(grep DISTRIB_DESCRIPTION= $ZZZ_PATH |cut -d "=" -f2 |cut -d "'" -f2)"
+  [[ -n "${DISTRIB}" ]] && sed -i "s?${DISTRIB}?OpenWrt ?g" "$ZZZ_PATH"
+
+;;
+openwrt-18.06)
+  
+  # 给固件LUCI做个标记
+  sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
+  echo -e "\nDISTRIB_RECOGNIZE='18'" >> "$BASE_PATH/etc/openwrt_release" && sed -i '/^\s*$/d' "$BASE_PATH/etc/openwrt_release"
+  
+  # 给源码增加luci-app-ssr-plus为默认自选
+  sed  -i  's/ luci-app-ssr-plus//g' target/linux/*/Makefile
+  sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-ssr-plus?g' target/linux/*/Makefile
+
+;;
+openwrt-21.02)
+  
+  # 给固件LUCI做个标记
+  sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
+  echo -e "\nDISTRIB_RECOGNIZE='20'" >> "$BASE_PATH/etc/openwrt_release" && sed -i '/^\s*$/d' "$BASE_PATH/etc/openwrt_release"
+  
+  # 给源码增加luci-app-ssr-plus为默认自选
+  sed  -i  's/ luci-app-ssr-plus//g' target/linux/*/Makefile
+  sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-ssr-plus?g' target/linux/*/Makefile
+
+;;
+esac
+
 
 function Diy_conf() {
 case "${REPO_BRANCH}" in
