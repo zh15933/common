@@ -6,9 +6,9 @@
           |__| 
              
       OpenWrt AutoBuild by DaHuiLang
-           LEDE-X86-64
+           LEDE-openwrt
  -----------------------------------------------------
        update----->openwrt
        tools------>tools
-       qinglong--->qinglong
+       qinglong------>qinglong
  -----------------------------------------------------
