@@ -796,7 +796,7 @@ memuaz() {
   1)
     export Api_Client="true"
     export Npm_yilai="true"
-    export Sys_kj="5"
+    export Sys_kj="4"
     export Ql_nvjdc="和maiark面板"
     ECHOG " 安装青龙+任务+依赖+maiark面板"
     qinglong_nvjdc
