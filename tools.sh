@@ -24,11 +24,13 @@ do
 	echo -e "$(cat /etc/banner)"
 	echo -e "
 ${Grey}AutoBuild 固件工具箱 ${Version}${White} [$$] [${Tools_File}]
+
 1. USB 空间扩展			6. 环境修复
 2. Samba 设置			7. 系统信息监控
 3. 端口占用列表			8. 在线设备列表
 4. 硬盘信息
 5. 网络检查
+
 ${Grey}u. 固件更新
 ${Yellow}x. 更新脚本
 ${White}q. 退出
@@ -320,6 +322,7 @@ config mount
         option enabled '1'
         option uuid '${UUID}'
         option target '/'
+
 EOF
 	uci commit fstab
 	ECHO y "\n运行结束,外接设备 '$1' 已挂载为系统根目录 '/'\n"
@@ -362,6 +365,7 @@ Samba_UI() {
 				if [[ ! $(cat ${Samba_UCI_List}) =~ ${Disk_Mounted_Point} ]] > /dev/null 2>&1 ;then
 					ECHO g "设置挂载点 '${Samba_Name}' ..."
 					cat >> /etc/config/samba <<EOF
+
 config sambashare
 	option auto '1'
 	option name '${Samba_Name}'
@@ -573,6 +577,7 @@ SmartInfo_Core() {
 		Phy_BS="${Phy_LB}"
 	fi
 	cat <<EOF
+
 	硬盘型号: ${Phy_Name}
 	固件版本: ${FW_Version}
 	硬盘温度: ${Phy_Temp}
@@ -590,6 +595,7 @@ SmartInfo_Core() {
 	通电情况: ${Power_Status}
 	读取计数: ${LBAs_Read}
 	写入计数: ${LBAs_Written} 
+
 ===========================================================
 EOF
 }
