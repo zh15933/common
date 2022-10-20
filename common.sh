@@ -225,7 +225,7 @@ elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
     exit 1
   fi
   export SOURCE="Mortal"
-  export LUCI_EDITION="18.06-k5.4"
+  export LUCI_EDITION="master"
   
 elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/lean/default-settings/files/zzz-default-settings"
@@ -271,9 +271,9 @@ openwrt-18.06)
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-theme-opentomato' | xargs -i rm -rf {}
 
 ;;
-openwrt-18.06-k5.4)
+master)
 
-  # 删除重复插件（天灵18.06-k5.4）
+  # 删除重复插件（天灵master）
   find . -name 'luci-app-cifs' -o -name 'luci-app-eqos' -o -name 'luci-theme-argon' | xargs -i rm -rf {}
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-app-wol' | xargs -i rm -rf {}
   find . -name 'luci-app-wrtbwmon' -o -name 'wrtbwmon' | xargs -i rm -rf {}
@@ -319,7 +319,7 @@ openwrt-18.06)
   
 
 ;;
-openwrt-18.06-k5.4)
+openwrt-master)
   
   # 给固件LUCI做个标记
   sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
