@@ -158,14 +158,14 @@ elif [[ "${REPO_BRANCH}" == "openwrt-18.06" ]]; then
   echo "SOURCE=Tianling" >> $GITHUB_ENV
   echo "LUCI_EDITION=18.06" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
-elif [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
+elif [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]]; then
   echo "ZZZ_PATH=${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" >> $GITHUB_ENV
   if [[ ! -f "${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" ]]; then
     TIME r "上游源码作者修改了zzz-default-settings文件的路径或者名称，找编译脚本的作者及时修改"
     exit 1
   fi
   echo "SOURCE=Mortal" >> $GITHUB_ENV
-  echo "LUCI_EDITION=21.02" >> $GITHUB_ENV
+  echo "LUCI_EDITION=openwrt-18.06-k5.4" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
 else
   echo "没发现该源码的分支，如果您没更改过的话，应该是上游仓库修改了，请同步上游仓库"
@@ -224,7 +224,7 @@ elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
     exit 1
   fi
   export SOURCE="Mortal"
-  export LUCI_EDITION="21.02"
+  export LUCI_EDITION="openwrt-18.06-k5.4"
 elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/lean/default-settings/files/zzz-default-settings"
   if [[ ! -f "${ZZZ_PATH}" ]]; then
