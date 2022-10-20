@@ -327,9 +327,6 @@ openwrt-21.02)
   sed  -i  's/ luci-app-ssr-plus//g' target/linux/*/Makefile
   sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-ssr-plus?g' target/linux/*/Makefile
   
-  # 替换99-default-settings
-  chmod -R 775 $HOME_PATH/build/common/Convert
-  source $HOME_PATH/build/common/Convert/Convert.sh
 
 ;;
 esac
@@ -346,9 +343,7 @@ src-git dahuilang https://github.com/shidahuilang/openwrt-package.git;${REPO_BRA
 sed -i '/^#/d' "$HOME_PATH/feeds.conf.default"
 sed -i '/^$/d' "$HOME_PATH/feeds.conf.default"
 }
-  # 替换99-default-settings
-  chmod -R 775 $HOME_PATH/build/common/Convert
-  source $HOME_PATH/build/common/Convert/Convert.sh
+
   
 function sbin_openwrt() {
 echo "正在执行：给固件增加[openwrt和tools和qinglong]命令"
