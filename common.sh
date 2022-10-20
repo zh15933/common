@@ -165,7 +165,7 @@ elif [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
     exit 1
   fi
   echo "SOURCE=Mortal" >> $GITHUB_ENV
-  echo "LUCI_EDITION=18.06" >> $GITHUB_ENV
+  echo "LUCI_EDITION=18.06-k5.4" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
 else
   echo "没发现该源码的分支，如果您没更改过的话，应该是上游仓库修改了，请同步上游仓库"
@@ -217,6 +217,7 @@ elif [[ "${matrixtarget}" == "Tianling_source" ]]; then
   fi
   export SOURCE="Tianling"
   export LUCI_EDITION="18.06"
+  
 elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/emortal/default-settings/files/99-default-settings"
   if [[ ! -f "${ZZZ_PATH}" ]]; then
@@ -224,7 +225,8 @@ elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
     exit 1
   fi
   export SOURCE="Mortal"
-  export LUCI_EDITION="18.06"
+  export LUCI_EDITION="18.06-k5.4"
+  
 elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/lean/default-settings/files/zzz-default-settings"
   if [[ ! -f "${ZZZ_PATH}" ]]; then
@@ -269,9 +271,9 @@ openwrt-18.06)
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-theme-opentomato' | xargs -i rm -rf {}
 
 ;;
-openwrt-21.02)
+openwrt-18.06-k5.4)
 
-  # 删除重复插件（天灵21.02）
+  # 删除重复插件（天灵18.06-k5.4）
   find . -name 'luci-app-cifs' -o -name 'luci-app-eqos' -o -name 'luci-theme-argon' | xargs -i rm -rf {}
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-app-wol' | xargs -i rm -rf {}
   find . -name 'luci-app-wrtbwmon' -o -name 'wrtbwmon' | xargs -i rm -rf {}
@@ -317,7 +319,7 @@ openwrt-18.06)
   
 
 ;;
-openwrt-21.02)
+openwrt-18.06-k5.4)
   
   # 给固件LUCI做个标记
   sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
