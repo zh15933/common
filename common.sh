@@ -269,9 +269,9 @@ openwrt-18.06)
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-theme-opentomato' | xargs -i rm -rf {}
 
 ;;
-openwrt-21.02)
+openwrt-18.06-k5.4)
 
-  # 删除重复插件（天灵21.02）
+  # 删除重复插件（天灵18.06-k5.4）
   find . -name 'luci-app-cifs' -o -name 'luci-app-eqos' -o -name 'luci-theme-argon' | xargs -i rm -rf {}
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-app-wol' | xargs -i rm -rf {}
   find . -name 'luci-app-wrtbwmon' -o -name 'wrtbwmon' | xargs -i rm -rf {}
@@ -320,7 +320,7 @@ openwrt-18.06)
   cp -Rf $HOME_PATH/build/common/Convert/1806-default-settings "$ZZZ_PATH"
 
 ;;
-openwrt-21.02)
+openwrt-18.06-k5.4)
   
   # 给固件LUCI做个标记
   sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
