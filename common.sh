@@ -330,9 +330,7 @@ openwrt-18.06-k5.4)
   sed  -i  's/ luci-app-ssr-plus//g' target/linux/*/Makefile
   sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-ssr-plus?g' target/linux/*/Makefile
   
-  # 替换99-default-settings
-  chmod -R 775 $HOME_PATH/build/common/Convert
-  source $HOME_PATH/build/common/Convert/Convert.sh
+
 
 ;;
 esac
