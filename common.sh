@@ -158,14 +158,14 @@ elif [[ "${REPO_BRANCH}" == "openwrt-18.06" ]]; then
   echo "SOURCE=Tianling" >> $GITHUB_ENV
   echo "LUCI_EDITION=18.06" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
-elif [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]]; then
+elif [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
   echo "ZZZ_PATH=${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" >> $GITHUB_ENV
   if [[ ! -f "${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" ]]; then
     TIME r "上游源码作者修改了zzz-default-settings文件的路径或者名称，找编译脚本的作者及时修改"
     exit 1
   fi
   echo "SOURCE=Mortal" >> $GITHUB_ENV
-  echo "LUCI_EDITION=openwrt-18.06-k5.4" >> $GITHUB_ENV
+  echo "LUCI_EDITION=21.02" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
 else
   echo "没发现该源码的分支，如果您没更改过的话，应该是上游仓库修改了，请同步上游仓库"
@@ -224,7 +224,7 @@ elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
     exit 1
   fi
   export SOURCE="Mortal"
-  export LUCI_EDITION="openwrt-18.06-k5.4"
+  export LUCI_EDITION="21.02"
 elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/lean/default-settings/files/zzz-default-settings"
   if [[ ! -f "${ZZZ_PATH}" ]]; then
@@ -269,9 +269,9 @@ openwrt-18.06)
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-theme-opentomato' | xargs -i rm -rf {}
 
 ;;
-openwrt-18.06-k5.4)
+openwrt-21.02)
 
-  # 删除重复插件（天灵18.06-k5.4）
+  # 删除重复插件（天灵21.02）
   find . -name 'luci-app-cifs' -o -name 'luci-app-eqos' -o -name 'luci-theme-argon' | xargs -i rm -rf {}
   find . -name 'luci-app-adguardhome' -o -name 'adguardhome' -o -name 'luci-app-wol' | xargs -i rm -rf {}
   find . -name 'luci-app-wrtbwmon' -o -name 'wrtbwmon' | xargs -i rm -rf {}
@@ -320,7 +320,7 @@ openwrt-18.06)
   cp -Rf $HOME_PATH/build/common/Convert/1806-default-settings "$ZZZ_PATH"
 
 ;;
-openwrt-18.06-k5.4)
+openwrt-21.02)
   
   # 给固件LUCI做个标记
   sed -i '/DISTRIB_RECOGNIZE/d' "$BASE_PATH/etc/openwrt_release"
@@ -330,7 +330,9 @@ openwrt-18.06-k5.4)
   sed  -i  's/ luci-app-ssr-plus//g' target/linux/*/Makefile
   sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-ssr-plus?g' target/linux/*/Makefile
   
-
+  # 替换99-default-settings
+  chmod -R 775 $HOME_PATH/build/common/Convert
+  source $HOME_PATH/build/common/Convert/Convert.sh
 
 ;;
 esac
@@ -439,7 +441,7 @@ if [[ "${REPO_BRANCH}" == "master" ]]; then
   sed -i 's/luciversion)%>)/luciversion)%>)-->/g' package/lean/autocore/files/*/index.htm
   sed -i 's#localtime  = os.date()#localtime  = os.date("%Y-%m-%d") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm
 fi
-if [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]]; then
+if [[ "${REPO_BRANCH}" == "openwrt-18.06" ]]; then
   sed -i 's/distversion)%>/distversion)%><!--/g' package/emortal/autocore/files/*/index.htm
   sed -i 's/luciversion)%>)/luciversion)%>)-->/g' package/emortal/autocore/files/*/index.htm
   sed -i 's#localtime  = os.date()#localtime  = os.date("%Y-%m-%d") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/emortal/autocore/files/*/index.htm
