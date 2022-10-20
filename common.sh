@@ -165,7 +165,7 @@ elif [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
     exit 1
   fi
   echo "SOURCE=Mortal" >> $GITHUB_ENV
-  echo "LUCI_EDITION=openwrt-18.06-k5.4" >> $GITHUB_ENV
+  echo "LUCI_EDITION=18.06" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
 else
   echo "没发现该源码的分支，如果您没更改过的话，应该是上游仓库修改了，请同步上游仓库"
