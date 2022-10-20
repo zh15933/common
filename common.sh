@@ -224,7 +224,7 @@ elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
     exit 1
   fi
   export SOURCE="Mortal"
-  export LUCI_EDITION="openwrt-18.06-k5.4"
+  export LUCI_EDITION="18.06"
 elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/lean/default-settings/files/zzz-default-settings"
   if [[ ! -f "${ZZZ_PATH}" ]]; then
