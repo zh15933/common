@@ -165,7 +165,7 @@ elif [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
     exit 1
   fi
   echo "SOURCE=Mortal" >> $GITHUB_ENV
-  echo "LUCI_EDITION=21.02" >> $GITHUB_ENV
+  echo "LUCI_EDITION=openwrt-18.06-k5.4" >> $GITHUB_ENV
   echo "MAINTAIN=CTCGFW's" >> $GITHUB_ENV
 else
   echo "没发现该源码的分支，如果您没更改过的话，应该是上游仓库修改了，请同步上游仓库"
@@ -224,7 +224,7 @@ elif [[ "${matrixtarget}" == "Mortal_source" ]]; then
     exit 1
   fi
   export SOURCE="Mortal"
-  export LUCI_EDITION="21.02"
+  export LUCI_EDITION="openwrt-18.06-k5.4"
 elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export ZZZ_PATH="${HOME_PATH}/package/lean/default-settings/files/zzz-default-settings"
   if [[ ! -f "${ZZZ_PATH}" ]]; then
