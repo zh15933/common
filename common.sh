@@ -822,23 +822,25 @@ fi
 }
 
 function Diy_organize() {
-cd ${TARGET_BSGET}
+cd ${FIRMWARE}
 mkdir -p ipk
-cp -rf $(find $HOME_PATH/bin/packages/ -type f -name "*.ipk") ipk/ && sync
+cp -rf $(find ${HOME_PATH}/bin/packages/ -type f -name "*.ipk") ipk/ && sync
 sudo tar -czf ipk.tar.gz ipk && sudo rm -rf ipk && sync
-rename -v "s/^immortalwrt/openwrt/" *
-if [[ -f ${GITHUB_WORKSPACE}/Clear ]]; then
-  cp -Rf ${GITHUB_WORKSPACE}/Clear ${TARGET_BSGET}/Clear.sh
-  chmod +x ${TARGET_BSGET}/Clear.sh && source ${TARGET_BSGET}/Clear.sh
-  rm -rf ${TARGET_BSGET}/Clear.sh
+if [[ `ls -1 | grep -c "immortalwrt"` -ge '1' ]]; then
+  rename -v "s/^immortalwrt/openwrt/" *
 fi
-rename -v "s/^openwrt/${SOURCE}/" *
-echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+for X in $(cat "${CLEAR_PATH}" |sed 's/rm -rf//g' |sed 's/rm -fr//g' |sed 's/\r//' |sed 's/ //g' |cut -d '-' -f4- |sed '/^$/d' |sed 's/^/*/g' |sed 's/$/*/g'); do
+   rm -rf "${X}"
+done
+rename -v "s/^openwrt/${Gujian_Date}-${SOURCE}/" *
 
-cd $HOME_PATH
+cd ${HOME_PATH}
 # 发布用的update_log.txt
 if [ "${UPLOAD_RELEASE}" == "true" ]; then
-  echo "### $(date +"%Y年%m月%d号-%H点%M分")" > ${GITHUB_WORKSPACE}/update_log.txt
+  echo "#### $(date +"%Y年%m月%d号-%H点%M分")" > ${GITHUB_WORKSPACE}/update_log.txt
+fi
+if [ "${REGULAR_UPDATE}" == "true" ]; then
+  echo "#### $(date +"%Y年%m月%d号-%H点%M分")" > ${GITHUB_WORKSPACE}/AutoUpdate_log.txt
 fi
 }
 
