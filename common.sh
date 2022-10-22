@@ -107,6 +107,11 @@ echo "Compte_Date=$(date +%Y年%m月%d号%H时%M分)" >> $GITHUB_ENV
 echo "Tongzhi_Date=$(date +%Y年%m月%d日)" >> $GITHUB_ENV
 echo "Gujian_Date=$(date +%m%d)" >> $GITHUB_ENV
 
+export Model_Name="$(cat /proc/cpuinfo |grep 'model name' |awk 'END {print}' |cut -f2 -d: |sed 's/^[ ]*//g')"
+export Cpu_Cores="$(cat /proc/cpuinfo | grep 'cpu cores' |awk 'END {print}' | cut -f2 -d: | sed 's/^[ ]*//g')"
+export RAM_total="$(free -h |awk 'NR==2' |awk '{print $(2)}' |sed 's/.$//')"
+export RAM_available="$(free -h |awk 'NR==2' |awk '{print $(7)}' |sed 's/.$//')"
+
 
 # github用的变量，如果有修改，下面Bendi_variable也要同步修改
 
@@ -867,6 +872,13 @@ TIME y "第一次用我仓库的，请不要拉取任何插件，先SSH进入固
 TIME y "拉取插件应该单独拉取某一个你需要的插件，别一下子就拉取别人一个插件包，这样容易增加编译失败概率"
 TIME r "修改IP、DNS、网关，请输入命令：openwrt"
 TIME r "在线更新命令：openwrt，工具箱输入命令：tools,安装青龙输入qinglong"
+TIME r ""
+TIME r ""
+TIME g "CPU性能：8370C > 8272CL > 8171M > E5系列"
+TIME g "您现在编译所用的服务器CPU型号为[ ${Model_Name} ]"
+TIME g "在此服务器分配核心数为[ ${Cpu_Cores} ],线程数为[ $(nproc) ]"
+TIME g "在此服务器分配内存为[ ${RAM_total} ],现剩余内存为[ ${RAM_available} ]"
+TIME r ""
 }
 
 
@@ -875,8 +887,8 @@ Plug_in="$(grep -i 'CONFIG_PACKAGE_luci-app' $HOME_PATH/.config && grep -i 'CONF
 Plug_in2="$(echo "${Plug_in}" | grep -v '^#' |sed '/INCLUDE/d' |sed '/=m/d' |sed '/_Transparent_Proxy/d' |sed '/qbittorrent_static/d' |sed 's/CONFIG_PACKAGE_//g' |sed 's/=y//g' |sed 's/^/、/g' |sed 's/$/\"/g' |awk '$0=NR$0' |sed 's/^/TIME g \"       /g')"
 echo "${Plug_in2}" >Plug-in
 sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1
-CPUNAME="$(cat /proc/cpuinfo |grep 'model name' |awk 'END {print}' |cut -f2 -d: |sed 's/^[ ]*//g')"
-CPUCORES="$(cat /proc/cpuinfo | grep 'cpu cores' |awk 'END {print}' | cut -f2 -d: | sed 's/^[ ]*//g')"
+#CPUNAME="$(cat /proc/cpuinfo |grep 'model name' |awk 'END {print}' |cut -f2 -d: |sed 's/^[ ]*//g')"
+#CPUCORES="$(cat /proc/cpuinfo | grep 'cpu cores' |awk 'END {print}' | cut -f2 -d: | sed 's/^[ ]*//g')"
 
 
 if [[ "${REPO_BRANCH}" == "openwrt-18.06" ]] || [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
@@ -1004,9 +1016,11 @@ echo
 TIME z " 系统空间      类型   总数  已用  可用 使用率"
 cd ../ && df -hT $PWD && cd $HOME_PATH
 echo
-TIME z "  本编译 服务器的 CPU型号为 [ ${CPUNAME} ]"
-echo
-TIME z "  使用 核心数 为 [ ${CPUCORES} ], 线程数为 [ $(nproc) ]"
+TIME g "CPU性能：8370C > 8272CL > 8171M > E5系列"
+TIME g "您现在编译所用的服务器CPU型号为[ ${Model_Name} ]"
+TIME g "在此服务器分配核心数为[ ${Cpu_Cores} ],线程数为[ $(nproc) ]"
+TIME g "在此服务器分配内存为[ ${RAM_total} ],现剩余内存为[ ${RAM_available} ]"
+TIME r ""
 echo
 if [ -n "$(ls -A "${HOME_PATH}/EXT4" 2>/dev/null)" ]; then
   chmod -R +x ${HOME_PATH}/EXT4
