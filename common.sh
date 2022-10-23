@@ -113,8 +113,6 @@ export RAM_total="$(free -h |awk 'NR==2' |awk '{print $(2)}' |sed 's/.$//')"
 export RAM_available="$(free -h |awk 'NR==2' |awk '{print $(7)}' |sed 's/.$//')"
 
 
-# github用的变量，如果有修改，下面Bendi_variable也要同步修改
-
 if [[ "${REPO_BRANCH}" == "master" ]]; then
   echo "ZZZ_PATH=${GITHUB_WORKSPACE}/openwrt/package/lean/default-settings/files/zzz-default-settings" >> $GITHUB_ENV
   if [[ ! -f "${GITHUB_WORKSPACE}/openwrt/package/lean/default-settings/files/zzz-default-settings" ]]; then
@@ -154,7 +152,7 @@ elif [[ "${REPO_BRANCH}" == "21.02" ]]; then
   echo "SOURCE=Lienol" >> $GITHUB_ENV
   echo "LUCI_EDITION=21.02" >> $GITHUB_ENV
   echo "MAINTAIN=Lienol's" >> $GITHUB_ENV
-elif [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]]; then
+elif [[ "${REPO_BRANCH}" == "openwrt-18.06" ]]; then
   echo "ZZZ_PATH=${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" >> $GITHUB_ENV
   if [[ ! -f "${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" ]]; then
     TIME r "上游源码作者修改了zzz-default-settings文件的路径或者名称，找编译脚本的作者及时修改"
@@ -240,6 +238,7 @@ elif [[ "${matrixtarget}" == "openwrt_amlogic" ]]; then
   export LUCI_EDITION="18.06"
 fi
 }
+
 
 
 function Diy_feeds() {
