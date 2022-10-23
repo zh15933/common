@@ -156,7 +156,7 @@ elif [[ "${REPO_BRANCH}" == "21.02" ]]; then
   echo "SOURCE=Lienol" >> $GITHUB_ENV
   echo "LUCI_EDITION=21.02" >> $GITHUB_ENV
   echo "MAINTAIN=Lienol's" >> $GITHUB_ENV
-elif [[ "${REPO_BRANCH}" == "openwrt-18.06" ]]; then
+elif [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]]; then
   echo "ZZZ_PATH=${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" >> $GITHUB_ENV
   if [[ ! -f "${GITHUB_WORKSPACE}/openwrt/package/emortal/default-settings/files/99-default-settings" ]]; then
     TIME r "上游源码作者修改了zzz-default-settings文件的路径或者名称，找编译脚本的作者及时修改"
@@ -267,7 +267,7 @@ master)
   find . -name 'luci-app-wrtbwmon' -o -name 'wrtbwmon' | xargs -i rm -rf {}
 
 ;;
-openwrt-18.06)
+openwrt-18.06-k5.4)
 
   # 删除重复插件（天灵18.06）
   find . -name 'luci-app-argon-config' -o -name 'luci-theme-argon' -o -name 'luci-theme-argonv3' -o -name 'luci-app-eqos' | xargs -i rm -rf {}
@@ -443,7 +443,7 @@ if [[ "${REPO_BRANCH}" == "master" ]]; then
   sed -i 's/luciversion)%>)/luciversion)%>)-->/g' package/lean/autocore/files/*/index.htm
   sed -i 's#localtime  = os.date()#localtime  = os.date("%Y-%m-%d") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm
 fi
-if [[ "${REPO_BRANCH}" == "openwrt-18.06" ]]; then
+if [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]]; then
   sed -i 's/distversion)%>/distversion)%><!--/g' package/emortal/autocore/files/*/index.htm
   sed -i 's/luciversion)%>)/luciversion)%>)-->/g' package/emortal/autocore/files/*/index.htm
   sed -i 's#localtime  = os.date()#localtime  = os.date("%Y-%m-%d") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/emortal/autocore/files/*/index.htm
@@ -917,7 +917,7 @@ CPUCORES="$(cat /proc/cpuinfo | grep 'cpu cores' |awk 'END {print}' | cut -f2 -d
 
 
 
-if [[ "${REPO_BRANCH}" == "openwrt-18.06" ]] || [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
+if [[ "${REPO_BRANCH}" == "openwrt-18.06-k5.4" ]] || [[ "${REPO_BRANCH}" == "openwrt-21.02" ]]; then
   export KERNEL_PATC=""
   export KERNEL_PATC="$(egrep KERNEL_PATCHVER:=[0-9]+\.[0-9]+ $HOME_PATH/target/linux/${TARGET_BOARD}/Makefile |cut -d "=" -f2)"
   [[ -z ${KERNEL_PATC} ]] && export KERNEL_PATC="$(egrep KERNEL_PATCHVER=[0-9]+\.[0-9]+ $HOME_PATH/target/linux/${TARGET_BOARD}/Makefile |cut -d "=" -f2)"
