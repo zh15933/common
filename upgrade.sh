@@ -10,9 +10,9 @@ function Diy_Part1() {
     rm -rf "$HOME_PATH/package/luci-app-autoupdate"
     git clone https://github.com/shidahuilang/luci-app-autoupdate $HOME_PATH/package/luci-app-autoupdate > /dev/null 2>&1
     [[ ! -d "$BASE_PATH/bin" ]] && mkdir $BASE_PATH/usr/bin
-    cp -Rf $BUILD_PATH/AutoUpdate.sh $BASE_PATH/bin/AutoUpdate
-    cp -Rf $BUILD_PATH/replace.sh $BASE_PATH/bin/replace
-    chmod 777 $BASE_PATH/bin/AutoUpdate $BASE_PATH/bin/replace
+    cp -Rf $BUILD_PATH/AutoUpdate.sh $BASE_PATH/bin/AutoUpdate.sh
+    cp -Rf $BUILD_PATH/replace.sh $BASE_PATH/bin/replace.sh
+    chmod 777 $BASE_PATH/bin/AutoUpdate.sh $BASE_PATH/bin/replace.sh
     sed  -i  's/ luci-app-ttyd//g' $HOME_PATH/target/linux/*/Makefile
     sed  -i  's/ luci-app-autoupdate//g' $HOME_PATH/target/linux/*/Makefile
     sed -i 's?DEFAULT_PACKAGES +=?DEFAULT_PACKAGES += luci-app-autoupdate luci-app-ttyd?g' $HOME_PATH/target/linux/*/Makefile
