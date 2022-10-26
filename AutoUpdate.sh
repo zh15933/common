@@ -3,7 +3,7 @@
 # AutoBuild Module by Hyy2001
 # AutoUpdate for Openwrt
 
-Version=V6.9
+Version=V7.1
 
 
 Shell_Helper() {
