@@ -45,9 +45,7 @@ if [[ `grep -c "passwall" /etc/opkg/distfeeds.conf` -ge '1' ]]; then
   sed -i '/passwall/d' /etc/opkg/distfeeds.conf
 fi
 
-sed -i 's@^[^#]@#&@' /etc/opkg/distfeeds.conf
 
-sed -i '/check_signature/s@^[^#]@#&@' /etc/opkg.conf
 
 rm -rf /etc/webweb.sh
 
