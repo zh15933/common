@@ -838,23 +838,25 @@ fi
 }
 
 function Diy_adguardhome() {
-if [[ `grep -c "CONFIG_PACKAGE_luci-app-adguardhome=y" ${HOME_PATH}/.config` -eq '1' ]]; then
-  echo "正在执行：给adguardhome下载核心"
-  if [[ `grep -c "CONFIG_ARCH=\"x86_64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-    Arch="amd64"
-    echo "X86_64"
-  elif [[ `grep -c "CONFIG_ARCH=\"i386\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-    Arch="i386"
-    echo "X86_32"
-  elif [[ `grep -c "CONFIG_ARCH=\"aarch64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-    Arch="arm64"
-    echo "armv8"
-  elif [[ `grep -c "CONFIG_ARCH=\"arm\"" ${HOME_PATH}/.config` -eq '1' ]] && [[ `grep -c "CONFIG_arm_v7=y" ${HOME_PATH}/.config` -eq '1' ]]; then
-    Arch="armv7"
-    echo "armv7"
-  else
-    echo "This model does not support automatic core download"
-  fi
+if [[ `grep -c "CONFIG_ARCH=\"x86_64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
+  Arch="amd64"
+  Archclash="amd64"
+  echo "amd64架构"
+elif [[ `grep -c "CONFIG_ARCH=\"i386\"" ${HOME_PATH}/.config` -eq '1' ]]; then
+  Arch="i386"
+  Archclash="386"
+  echo "X86 32位架构"
+elif [[ `grep -c "CONFIG_ARCH=\"aarch64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
+  Arch="arm64"
+  Archclash="armv8"
+  echo "arm64架构"
+elif [[ `grep -c "CONFIG_ARCH=\"arm\"" ${HOME_PATH}/.config` -eq '1' ]] && [[ `grep -c "CONFIG_arm_v7=y" ${HOME_PATH}/.config` -eq '1' ]]; then
+  Arch="armv7"
+  Archclash="armv7"
+  echo "armv7架构"
+else
+  echo "This model does not support automatic core download"
+fi
 
 if [[ `grep -c "CONFIG_PACKAGE_luci-app-openclash=y" ${HOME_PATH}/.config` -eq '1' ]]; then
   echo "正在执行：给openclash下载核心"
@@ -904,6 +906,7 @@ if [[ `grep -c "CONFIG_PACKAGE_luci-app-adguardhome=y" ${HOME_PATH}/.config` -eq
     rm -rf ${HOME_PATH}/{AdGuardHome_linux_${Arch}.tar.gz,AdGuardHome}
   fi
 fi
+}
 
 
 function Diy_files() {
