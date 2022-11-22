@@ -919,7 +919,7 @@ if [[ `grep -c "CONFIG_PACKAGE_luci-app-openclash=y" ${HOME_PATH}/.config` -eq '
     rm -rf ${HOME_PATH}/clash-neihe
   fi
 fi
-}
+
 
 
 
