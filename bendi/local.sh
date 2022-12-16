@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #====================================================
 #	System Request:Ubuntu 18.04lts/20.04lts/22.04lts
 #	Author:	dahuilang
@@ -47,6 +46,10 @@ function ECHOB() {
   echo -e "${Red} $1 ${Font}"
   echo
 }
+function ECHOBB() {
+  echo -e "${Blue} $1 ${Font}"
+  echo
+}
 function ECHOYY() {
   echo -e "${Yellow} $1 ${Font}"
 }
@@ -71,6 +74,7 @@ judge() {
 export BENDI_VERSION="2.0"
 export GITHUB_WORKSPACE="$PWD"
 export HOME_PATH="${GITHUB_WORKSPACE}/openwrt"
+export OPERATES_PATH="${GITHUB_WORKSPACE}/operates"
 export GITHUB_ENV="${GITHUB_WORKSPACE}/GITHUB_ENV"
 CURRENT_PATH="${GITHUB_WORKSPACE##*/}"
 echo '#!/bin/bash' >${GITHUB_ENV}
@@ -115,7 +119,7 @@ if [[ `echo "${PATH}" |grep -c "Windows"` -ge '1' ]]; then
     read -t 30 -p " [输入[Y/y]回车结束编译,按说明解决路径问题,任意键使用临时解决方式](不作处理,30秒后继续编译)： " Bendi_Wsl
     case ${Bendi_Wsl} in
     [Yy])
-      ECHOYY "请到 https://github.com/shidahuilang/openwrt 查看说明"
+      ECHOYY "请到 https://github.com/shidahuilang/YJBY-openwrt 查看说明"
       exit 0
     ;;
     *)
@@ -164,7 +168,8 @@ if [[ `grep -c "TIME" common.sh` -ge '1' ]]; then
    clear
    echo
    ECHOY "首次使用本脚本，需要先安装依赖，10秒后开始安装依赖"
-   ECHOYY "如果出现 YES OR NO 选择界面，直接按回车即可"
+   ECHOYY "升级ubuntu插件和安装依赖，时间或者会比较长(取决于您的网络质量)，请耐心等待"
+   ECHOY "如果出现 YES OR NO 选择界面，直接按回车即可"
    sleep 10
    echo
    source common.sh && Diy_update
@@ -186,9 +191,13 @@ function Bendi_DiySetup() {
 cd ${GITHUB_WORKSPACE}
 if [[ ! -f "operates/${FOLDER_NAME}/settings.ini" ]]; then
   ECHOG "下载operates自定义配置文件"
-  bash <(curl -fsSL https://raw.githubusercontent.com/shidahuilang/common/main/bendi/tongbu.sh)
+  curl -fsSL https://raw.githubusercontent.com/shidahuilang/common/main/bendi/tongbu.sh -o tongbu.sh
+  source tongbu.sh && menu3
   judge "operates自定义配置文件下载"
-  source "operates/${FOLDER_NAME}/settings.ini"
+  rm -rf tongbu.sh
+  if [[ -n "${FOLDER_NAME}" ]]; then
+    source "operates/${FOLDER_NAME}/settings.ini"
+  fi
 else
   source "operates/${FOLDER_NAME}/settings.ini"
 fi
@@ -198,10 +207,13 @@ function Bendi_Tongbu() {
 cd ${GITHUB_WORKSPACE}
 echo
 echo "开始同步上游operates文件"
-bash <(curl -fsSL https://raw.githubusercontent.com/shidahuilang/common/main/bendi/tongbu.sh)
+curl -fsSL https://raw.githubusercontent.com/shidahuilang/common/main/bendi/tongbu.sh -o tongbu.sh
+source tongbu.sh && ${tongbumemu}
 if [[ $? -ne 0 ]]; then
+  rm -rf tongbu.sh
   ECHOB "同步上游仓库失败，请检查网络"
 else
+  rm -rf tongbu.sh
   ECHOB "同步上游仓库完成，请至operates检查设置，设置好最新配置再进行编译"
 fi
 }
@@ -221,7 +233,7 @@ function Bendi_Version() {
       case ${TB} in
       [Yy]) 
         ECHOG "正在同步operates文件，请稍后..."
-        export BENDI_SHANCHUBAK="2"
+        export tongbumemu="menu2"
         Bendi_Tongbu
       ;;
       *)
@@ -230,6 +242,96 @@ function Bendi_Version() {
     esac
     fi
   fi
+}
+
+function github_deletefile() {
+ECHOY "删除operates文件夹里面的机型文件夹"
+ls -1 operates |awk '{print "  " $0}'
+echo
+ECHOGG "请输入您要删除的文件夹名称,多个文件名的话请用英文的逗号分隔"
+while :; do
+read -p " 请输入：" aa
+if [[ -z "${aa}" ]]; then
+  ECHOR "文件名不能为空"
+else
+  echo
+  echo " 删除${aa}"
+  github_deletefile2
+  exit 0
+fi
+done
+}
+function github_deletefile2() {
+bb=(${aa//,/ })
+for cc in ${bb[@]}; do
+  if [[ -d "operates/${cc}" ]]; then
+    rm -rf operates/${cc}
+    ECHOY "已删除[${cc}]文件夹"
+  else
+    ECHOR "[${cc}]文件夹不存在"
+  fi
+done
+ECHOBB "10秒后返回主菜单"
+sleep 1
+seconds=9
+while [ $seconds -gt 0 ];do
+  echo -n " ${seconds}"
+  sleep 1
+  seconds=$((${seconds} - 1))
+  echo -ne "\r   \r"
+done
+BENDI_WENJIAN
+}
+
+function github_establish() {
+ECHOY "在operates文件夹里面创建机型文件夹"
+ls -1 operates |awk '{print "  " $0}'
+echo
+ECHOGG "请输入上面某一文件夹名称,为您要创建的机型文件夹当蓝本"
+while :; do
+read -p " 请输入：" aa
+if [[ -z "${aa}" ]]; then
+  ECHOR "文件名不能为空"
+elif [[ ! -d "operates/${aa}" ]]; then
+  ECHOR "operates文件夹里${aa}不存在"
+else
+  echo
+  echo " 以${aa}为蓝本创建文件夹"
+  github_establish2
+  exit 0
+fi
+done
+}
+function github_establish2() {
+echo
+ECHOGG "请输入您要创建的机型文件夹名称"
+while :; do
+read -p " 请输入：" bb
+if [[ -z "${bb}" ]]; then
+  ECHOR "文件名不能为空"
+elif [[ -d "operates/${bb}" ]]; then
+  ECHOR "operates文件夹里面,已存在${bb}"
+else
+  echo
+  echo " 创建${bb}文件夹"
+  github_establish3
+  exit 0
+fi
+done
+}
+function github_establish3() {
+cp -Rf operates/"${aa}" operates/"${bb}"
+ECHOY "[${bb}]文件夹创建完成"
+ECHOBB "10秒后返回主菜单"
+sleep 1
+seconds=9
+while [ $seconds -gt 0 ];do
+  echo -n " ${seconds}"
+  sleep 1
+  seconds=$((${seconds} - 1))
+  echo -ne "\r   \r"
+done
+BENDI_WENJIAN
 }
 
 function Bendi_EveryInquiry() {
@@ -329,7 +431,7 @@ if [[ ! -f "${BUILD_PATH}/common.sh" ]]; then
 else
   source ${BUILD_PATH}/common.sh && Diy_distrib
 fi
-# sed -i '/-rl/d' "${BUILD_PATH}/${DIY_PART_SH}"
+sed -i '/-rl \.\//d' "${BUILD_PATH}/${DIY_PART_SH}"
 }
 
 function Bendi_SourceClean() {
@@ -399,7 +501,7 @@ if [[ "${MAKE_CONFIGURATION}" == "true" ]]; then
   REPO_BRANCH2="${REPO_BRANCH}"
   LUCI_EDITION2="${LUCI_EDITION}"
   TARGET_PROFILE2="${TARGET_PROFILE}"
-  CONFIG_FILE="${CONFIG_FILE}"
+  SOURCE2="${SOURCE}"
   " > ${HOME_PATH}/key-buildzu
   sed -i 's/^[ ]*//g' ${HOME_PATH}/key-buildzu
   sudo chmod +x ${HOME_PATH}/key-buildzu
@@ -442,19 +544,18 @@ rm -rf ${HOME_PATH}/CHONGTU
 
 function Bendi_DownloadDLFile() {
 ECHOGG "下载DL文件，请耐心等候..."
-cd ${HOME_PATH}
-make defconfig
-[[ -d "${HOME_PATH}/build_logo" ]] && mkdir -p ${HOME_PATH}/build_logo
-make -j8 download |tee ${HOME_PATH}/build_logo/build.log
-
 echo "
 SUCCESS_FAILED="xzdl"
 FOLDER_NAME2="${FOLDER_NAME}"
 REPO_BRANCH2="${REPO_BRANCH}"
 LUCI_EDITION2="${LUCI_EDITION}"
 TARGET_PROFILE2="${TARGET_PROFILE}"
-CONFIG_FILE="${CONFIG_FILE}"
+SOURCE2="${SOURCE}"
 " > ${HOME_PATH}/key-buildzu
+cd ${HOME_PATH}
+make defconfig
+[[ -d "${HOME_PATH}/build_logo" ]] && mkdir -p ${HOME_PATH}/build_logo
+make -j8 download |tee ${HOME_PATH}/build_logo/build.log
 sed -i 's/^[ ]*//g' ${HOME_PATH}/key-buildzu
 sudo chmod +x ${HOME_PATH}/key-buildzu
 
@@ -489,7 +590,7 @@ fi
 function Bendi_Compile() {
 cd ${HOME_PATH}
 source ${GITHUB_ENV}
-START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+START_TIME=`date -d "$(date +'%Y-%m-%d %H:%M:%S')" +%s`
 Model_Name="$(cat /proc/cpuinfo |grep 'model name' |awk 'END {print}' |cut -f2 -d: |sed 's/^[ ]*//g')"
 Cpu_Cores="$(cat /proc/cpuinfo | grep 'cpu cores' |awk 'END {print}' | cut -f2 -d: | sed 's/^[ ]*//g')"
 RAM_total="$(free -h |awk 'NR==2' |awk '{print $(2)}' |sed 's/.$//')"
@@ -537,7 +638,7 @@ if [[ `ls -1 "${FIRMWARE_PATH}" |grep -c "${TARGET_BOARD}"` -eq '0' ]]; then
   REPO_BRANCH2="${REPO_BRANCH}"
   LUCI_EDITION2="${LUCI_EDITION}"
   TARGET_PROFILE2="${TARGET_PROFILE}"
-  CONFIG_FILE="${CONFIG_FILE}"
+  SOURCE2="${SOURCE}"
   " > ${HOME_PATH}/key-buildzu
   sed -i 's/^[ ]*//g' ${HOME_PATH}/key-buildzu
   sudo chmod +x ${HOME_PATH}/key-buildzu
@@ -550,7 +651,7 @@ else
   REPO_BRANCH2="${REPO_BRANCH}"
   LUCI_EDITION2="${LUCI_EDITION}"
   TARGET_PROFILE2="${TARGET_PROFILE}"
-  CONFIG_FILE="${CONFIG_FILE}"
+  SOURCE2="${SOURCE}"
   " > ${HOME_PATH}/key-buildzu
   sed -i 's/^[ ]*//g' ${HOME_PATH}/key-buildzu
   sudo chmod +x ${HOME_PATH}/key-buildzu
@@ -580,10 +681,8 @@ else
 fi
 ECHOGG "已为您把配置文件替换到operates/${FOLDER_NAME}/${CONFIG_FILE}里"
 ECHOY "编译日期：$(date +'%Y年%m月%d号')"
-END_TIME=`date +'%Y-%m-%d %H:%M:%S'`
-START_SECONDS=$(date --date="$START_TIME" +%s)
-END_SECONDS=$(date --date="$END_TIME" +%s)
-SECONDS=$((END_SECONDS-START_SECONDS))
+END_TIME=`date -d "$(date +'%Y-%m-%d %H:%M:%S')" +%s`
+SECONDS=$((END_TIME-START_TIME))
 HOUR=$(( $SECONDS/3600 ))
 MIN=$(( ($SECONDS-${HOUR}*3600)/60 ))
 SEC=$(( $SECONDS-${HOUR}*3600-${MIN}*60 ))
@@ -763,62 +862,52 @@ function Bendi_xuanzhe() {
   fi
   if [[ ! -d "operates" ]]; then
     ECHOG "没有主要编译程序存在,正在下载中,请稍后..."
-    sleep 3
-    export BENDI_SHANCHUBAK='3'
+    sleep 2
     Bendi_DiySetup
   else
     YY="$(ls -1 "operates" |awk 'NR==1')"
     if [[ ! -f "operates/${YY}/settings.ini" ]]; then
       ECHOG "没有主要编译程序存在,正在下载中,请稍后..."
-      sleep 3
-      export BENDI_SHANCHUBAK='3'
+      sleep 2
       Bendi_DiySetup
     fi
   fi
   clear
   echo 
   echo
-  jixingliebiao="$(echo "0、刷新列表" |awk '{print "  " $0}')"
   ls -1 "operates" |awk '$0=NR" "$0' > GITHUB_ENN
   ls -1 "operates" > GITHUB_EVN
   XYZDSZ="$(cat GITHUB_ENN | awk 'END {print}' |awk '{print $(1)}')"
   rm -rf GITHUB_ENN
-  echo "${jixingliebiao}"
   ls -1 "operates" |awk '$0=NR"、"$0'|awk '{print "  " $0}'
   echo
   echo
   echo -e "${Blue}  请输入您要编译源码前面对应的数值(1~X),输入[N]则为退出程序${Font}"
   echo
-  echo -e "${Green}  您可以自行在operates内建立机型文件夹来进行编译使用(不懂的请查看云编译教程)${Font}"
+  echo -e "${Yellow}  输入[0]或[Y/y]回车,进行创建机型文件夹或删除机型文件夹${Font}"
   echo
-  echo -e "${Red}  如果您在这个步骤自建了机型文件夹,请按[0]回车进行刷新机型列表${Font}"
-  if [[ `echo "${PATH}" |grep -c "Windows"` -ge '1' ]]; then
-    echo
-    echo -e "${Yellow}  您使用的为WSL系统,若要自行建立文件夹${Font}"
-    echo -e "${Yellow}  请勿直接打开Windows文件夹进行修改,这样修改出来的文件很经常是有问题的${Font}"
-    echo -e "${Yellow}  请用WinSCP或者其他工具进行连接,然后建立机型文件夹${Font}"
-  fi
-  echo
-  export YUMINGIP="  请输入数字(1~N)"
+  export YUMINGIP="  请输入您的选择"
   while :; do
   YMXZ=""
   read -p "${YUMINGIP}：" YMXZ
-  if [[ "${YMXZ}" == "0" ]]; then
-    CUrrenty="0"
+  if [[ "${YMXZ}" == "0" ]] || [[ "${YMXZ}" == "Y" ]] || [[ "${YMXZ}" == "y" ]]; then
+    CUrrenty="Y"
   elif [[ "${YMXZ}" == "N" ]] || [[ "${YMXZ}" == "n" ]]; then
     CUrrenty="N"
   elif [[ -z "${YMXZ}" ]]; then
     CUrrenty="x"
   elif [[ "${YMXZ}" -le "${XYZDSZ}" ]]; then
-    CUrrenty="Y"
+    CUrrenty="B"
   else
     CUrrenty="x"
   fi
   case $CUrrenty in
-  Y)
+  B)
     export FOLDER_NAME3=$(cat GITHUB_EVN |awk ''NR==${YMXZ}'')
     export FOLDER_NAME="${FOLDER_NAME3}"
+    sed -i '/FOLDER_NAME=/d' "${GITHUB_ENV}"
     echo "FOLDER_NAME=${FOLDER_NAME}" >> ${GITHUB_ENV}
+    source ${GITHUB_ENV}
     ECHOY " 您选择了使用 ${FOLDER_NAME} 编译固件,3秒后将进行启动编译"
     rm -rf GITHUB_EVN
     sleep 2
@@ -831,19 +920,20 @@ function Bendi_xuanzhe() {
     exit 0
   break
   ;;
-  0)
-    Bendi_xuanzhe
+  Y)
+    BENDI_WENJIAN
     echo
   break
   ;;
   *)
-    export YUMINGIP="  敬告,请输入正确数值"
+    export YUMINGIP="  敬告,请输入正确选项"
   ;;
   esac
   done
 }
 
 function Bendi_menu2() {
+export ERCI="1"
 BENDI_Diskcapacity
 Bendi_Dependent
 Bendi_Version
@@ -891,6 +981,39 @@ Bendi_Arrangement
 Bendi_shouweigongzhong
 }
 
+function BENDI_WENJIAN() {
+cd ${GITHUB_WORKSPACE}
+clear
+echo
+echo
+ECHOY " 1. 创建机型文件夹"
+ECHOY " 2. 删除机型文件夹"
+ECHOY " 3. 啥都不干,回到选择机型继续编译"
+echo
+XUANZHEOP="请输入数字"
+echo
+while :; do
+read -p " ${XUANZHEOP}： " CHOOSE
+case $CHOOSE in
+1)
+  github_establish
+break
+;;
+2)
+  github_deletefile
+break
+;;
+3)
+  Bendi_xuanzhe
+break
+;;
+*)
+   XUANZHEOP="请输入正确的数字编号"
+;;
+esac
+done
+}
+
 function Bendi_UPDIYSETUP() {
 cd ${GITHUB_WORKSPACE}
 clear
@@ -906,7 +1029,7 @@ echo -e "  ${Blue}3${Font}、${Yellow}删除您现有的operates文件夹,从上
 echo
 echo -e "  ${Blue}4${Font}、${Yellow}返回上级菜单${Font}"
 echo
-echo -e "  ${Blue}5${Font}、${Yellow}退出退出程序${Font}"
+echo -e "  ${Blue}5${Font}、${Yellow}退出程序${Font}"
 echo
 echo
 IYSETUP="  请输入数字确定您的选择"
@@ -916,24 +1039,28 @@ read -p "${IYSETUP}：" Bendi_upsetup
 case ${Bendi_upsetup} in
 1)
   [[ ! -f "/etc/oprelyon" ]] && Bendi_Dependent
-  export BENDI_SHANCHUBAK="2"
+  export tongbumemu="menu2"
   Bendi_Tongbu
 break
 ;;
 2)
   [[ ! -f "/etc/oprelyon" ]] && Bendi_Dependent
-  export BENDI_SHANCHUBAK="3"
+  export tongbumemu="menu3"
   Bendi_Tongbu
 break
 ;;
 3)
   [[ ! -f "/etc/oprelyon" ]] && Bendi_Dependent
   [[ -d "operates" ]] && rm -rf operates
-  Bendi_Tongbu
+  Bendi_DiySetup
 break
 ;;
 4)
-  ${BENDI_MEMU}
+  if [[ -n "${BENDI_MEMU}" ]]; then
+    ${BENDI_MEMU}
+  else
+    menu
+  fi
 break
 ;;
 5)
@@ -952,27 +1079,39 @@ function menu2() {
   echo
   echo
   if [[ "${SUCCESS_FAILED}" == "success" ]]; then
-    echo -e " ${Blue}当前使用源码${Font}：${Yellow}${FOLDER_NAME2}-${LUCI_EDITION2}${Font}"
+    echo -e " ${Blue}上回使用机型文件夹${Font}：${Yellow}${FOLDER_NAME2}${Font}"
+    echo -e " ${Blue}上回编译使用源码${Font}：${Yellow}${SOURCE2}-${LUCI_EDITION2}${Font}"
     echo -e " ${Blue}上回成功编译机型${Font}：${Yellow}${TARGET_PROFILE2}${Font}"
-    echo -e " ${Blue}operates/${FOLDER_NAME2}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}使用配置文件名称${Font}：${Yellow}${CONFIG_FILE1}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/seed文件夹是否存在${CONFIG_FILE1}名称文件${Font}：${Yellow}${JIXINGWENJIAN}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/${SEED_CONFIG1}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
     aaaa="保留缓存,再次编译?"
     bbbbb="编译"
   elif [[ "${SUCCESS_FAILED}" == "makeconfig" ]]; then  
-    echo -e " ${Blue}当前使用源码${Font}：${Yellow}${FOLDER_NAME2}-${LUCI_EDITION2}${Font}"
+    echo -e " ${Blue}上回使用机型文件夹${Font}：${Yellow}${FOLDER_NAME2}${Font}"
+    echo -e " ${Blue}上回编译使用源码${Font}：${Yellow}${SOURCE2}-${LUCI_EDITION2}${Font}"
     echo -e " ${Blue}上回制作了${Font}${Yellow}${TARGET_PROFILE2}机型的.config${Font}${Blue}配置文件${Font}"
-    echo -e " ${Blue}operates/${FOLDER_NAME2}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}使用配置文件名称${Font}：${Yellow}${CONFIG_FILE1}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/seed文件夹是否存在${CONFIG_FILE1}名称文件${Font}：${Yellow}${JIXINGWENJIAN}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/${SEED_CONFIG1}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
     aaaa="继续制作.config配置文件"
     bbbbb="制作.config配置文件?"
   elif [[ "${SUCCESS_FAILED}" == "xzdl" ]]; then
-    echo -e " ${Blue}当前使用源码${Font}：${Yellow}${FOLDER_NAME2}-${LUCI_EDITION2}${Font}"
-    echo -e " ${Red}大兄弟啊,上回下载完DL就没搞成了,继续[${TARGET_PROFILE2}]搞下去?${Font}"
-    echo -e " ${Blue}operates/${FOLDER_NAME2}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
+    echo -e " ${Blue}上回使用机型文件夹${Font}：${Yellow}${FOLDER_NAME2}${Font}"
+    echo -e " ${Blue}上回编译使用源码${Font}：${Yellow}${SOURCE2}-${LUCI_EDITION2}${Font}"
+    echo -e " ${Red}大兄弟啊,上回没搞成,继续[${FOLDER_NAME2}]搞下去?${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}使用配置文件名称${Font}：${Yellow}${CONFIG_FILE1}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/seed文件夹是否存在${CONFIG_FILE1}名称文件${Font}：${Yellow}${JIXINGWENJIAN}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/${SEED_CONFIG1}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
     aaaa="接着上次继续再搞下去?"
     bbbbb="编译"
   else
-    echo -e " ${Blue}当前使用源码${Font}：${Yellow}${FOLDER_NAME2}-${LUCI_EDITION2}${Font}"
+    echo -e " ${Blue}上回使用机型文件夹${Font}：${Yellow}${FOLDER_NAME2}${Font}"
+    echo -e " ${Blue}上回编译使用源码${Font}：${Yellow}${SOURCE2}-${LUCI_EDITION2}${Font}"
     echo -e " ${Red}大兄弟啊,上回编译${Yellow}[${TARGET_PROFILE2}]${Font}${Red}于失败告终了${Font}"
-    echo -e " ${Blue}operates/${FOLDER_NAME2}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}使用配置文件名称${Font}：${Yellow}${CONFIG_FILE1}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/seed文件夹是否存在${CONFIG_FILE1}名称文件${Font}：${Yellow}${JIXINGWENJIAN}${Font}"
+    echo -e " ${Blue}当前operates/${FOLDER_NAME2}/${SEED_CONFIG1}配置文件机型${Font}：${Yellow}${TARGET_PROFILE3}${Font}"
     aaaa="保留缓存,再特么的搞一搞?"
     bbbbb="编译"
   fi
@@ -1031,7 +1170,7 @@ echo
 ECHOY " 1. 进行选择编译或制作配置文件源码"
 ECHOY " 2. 同步上游operates文件"
 ECHOY " 3. 打包N1或晶晨系列固件(您要有armvirt_64的.tar.gz固件)"
-ECHOY " 4. 退出编译程序"
+ECHOY " 4. 退出程序"
 echo
 XUANZHEOP="请输入数字"
 echo
@@ -1039,7 +1178,7 @@ while :; do
 read -p " ${XUANZHEOP}： " CHOOSE
 case $CHOOSE in
 1)
-  echo "dizhi"
+  Bendi_xuanzhe
 break
 ;;
 2)
@@ -1094,21 +1233,31 @@ else
 fi
 if [[ -f "operates/${FOLDER_NAME2}/settings.ini" ]]; then
   KAIDUAN_JIANCE="1"
-  source operates/${FOLDER_NAME2}/settings.ini
+  CONFIG_FILE1="$(source ${OPERATES_PATH}/${FOLDER_NAME2}/settings.ini && echo "${CONFIG_FILE}")"
+  SEED_CONFIG1="seed/${CONFIG_FILE1}"
 else
   KAIDUAN_JIANCE="0"
 fi
-if [[ "${KAIDUAN_JIANCE}" == "1" ]] && [[ -f "operates/${FOLDER_NAME2}/${CONFIG_FILE}" ]]; then
-  if [[ `grep -c "CONFIG_TARGET_x86_64=y" "operates/${FOLDER_NAME2}/${CONFIG_FILE}"` -eq '1' ]]; then
+
+if [[ -f "${OPERATES_PATH}/${FOLDER_NAME2}/${SEED_CONFIG1}" ]]; then
+  JIXINGWENJIAN="存在"
+else
+  JIXINGWENJIAN="不存在"
+fi
+
+if [[ "${KAIDUAN_JIANCE}" == "1" ]] && [[ "${JIXINGWENJIAN}" == "存在" ]]; then
+  if [[ `grep -c "CONFIG_TARGET_x86_64=y" "${OPERATES_PATH}/${FOLDER_NAME2}/${SEED_CONFIG1}"` -eq '1' ]]; then
     TARGET_PROFILE3="x86-64"
-  elif [[ `grep -c "CONFIG_TARGET_x86=y" "operates/${FOLDER_NAME2}/${CONFIG_FILE}"` == '1' ]]; then
+  elif [[ `grep -c "CONFIG_TARGET_x86=y" "${OPERATES_PATH}/${FOLDER_NAME2}/${SEED_CONFIG1}"` == '1' ]]; then
     TARGET_PROFILE3="x86-32"
-  elif [[ `grep -c "CONFIG_TARGET_armvirt_64_Default=y" "operates/${FOLDER_NAME2}/${CONFIG_FILE}"` -eq '1' ]]; then
+  elif [[ `grep -c "CONFIG_TARGET_armvirt_64_Default=y" "${OPERATES_PATH}/${FOLDER_NAME2}/${SEED_CONFIG1}"` -eq '1' ]]; then
     TARGET_PROFILE3="Armvirt_64"
   else
-    TARGET_PROFILE3="$(grep -Eo "CONFIG_TARGET.*DEVICE.*=y" "operates/${FOLDER_NAME2}/${CONFIG_FILE}" | sed -r 's/.*DEVICE_(.*)=y/\1/')"
+    TARGET_PROFILE3="$(grep -Eo "CONFIG_TARGET.*DEVICE.*=y" "${OPERATES_PATH}/${FOLDER_NAME2}/${SEED_CONFIG1}" | sed -r 's/.*DEVICE_(.*)=y/\1/')"
   fi
   [[ -z "${TARGET_PROFILE3}" ]] && TARGET_PROFILE3="未知"
+else
+  TARGET_PROFILE3="未知"
 fi
 if [[ "${KAIDUAN_JIANCE}" == "1" ]]; then
   FOLDER_NAME="${FOLDER_NAME2}"
