@@ -914,6 +914,29 @@ if [[ "${OpenClash_branch}" != "0" && "${OpenClash_branch}" != "dev" && "${OpenC
   fi
 fi
 
+# openclash内核
+if [[ ! "${COLLECTED_PACKAGES}" == "true" ]]; then
+  [[ -f "${HOME_PATH}/files/etc/openclash/core/clash" ]] && rm -rf ${HOME_PATH}/files/etc/openclash/core/clash
+  OpenClash_branch="0"
+  echo "OpenClash_Core=0" >> ${GITHUB_ENV}
+  if [[ "${OpenClash_Core}" == "1" ]]; then
+    echo "TIME r \"因没开作者收集的插件包,没OpenClash插件,对openclash的分支选择无效\"" >> ${HOME_PATH}/CHONGTU
+  fi
+elif [[ "${COLLECTED_PACKAGES}" == "true" ]] && [[ "${OpenClash_Core}" == "1" ]]; then
+  echo "OpenClash_Core=1" >> ${GITHUB_ENV}
+else
+  echo "OpenClash_Core=0" >> ${GITHUB_ENV}
+  [[ -f "${HOME_PATH}/files/etc/openclash/core/clash" ]] && rm -rf ${HOME_PATH}/files/etc/openclash/core/clash
+fi
+
+if [[ "${OpenClash_branch}" != "0" && "${OpenClash_branch}" != "dev" && "${OpenClash_branch}" != "master" ]]; then
+  if [[ "${SOURCE_CODE}" =~ (OFFICIAL|Xwrt) ]]; then
+    OpenClash_branch="dev"
+  else
+    OpenClash_branch="master"
+  fi
+fi
+
 uci_openclash="0"
 sj_clash=`date -d "$(date +'%Y-%m-%d %H:%M:%S')" +%s`
 if [[ -d "${HOME_PATH}/package/luci-app-openclash" ]]; then
@@ -924,17 +947,25 @@ if [[ -d "${HOME_PATH}/package/luci-app-openclash" ]]; then
   SECONDS=$((t2-t1))
   HOUR=$(( $SECONDS/3600 ))
 fi
-if [[ "${HOUR}" -lt "12" ]]; then
-  clashgs="1"
-else
-  clashgs="0"
+
+if [[ -n "${BENDI_VERSION}" ]]; then
+  if [[ "${HOUR}" -lt "12" ]]; then
+    clashgs="1"
+    echo "OpenClash_Core=0" >> ${GITHUB_ENV}
+  else
+    clashgs="0"
+    echo "OpenClash_Core=${OpenClash_Core}" >> ${GITHUB_ENV}
+  fi
 fi
+
 if [[ -f "${jiance_clash}" ]]; then
   clash_branch="$(cat ${jiance_clash})"
 else
   clash_branch="clash_branch"
 fi
 if [[ "${OpenClash_branch}" == "0" ]]; then
+  find . -type d -name 'luci-app-openclash' | xargs -i rm -rf {}
+  echo "OpenClash_Core=0" >> ${GITHUB_ENV}
   echo "不需要OpenClash插件"
 elif [[ "${OpenClash_branch}" == "${clash_branch}" ]] && [[ "${clashgs}" == "1" ]]; then
   echo ""
