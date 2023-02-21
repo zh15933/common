@@ -891,29 +891,6 @@ else
   echo "AdGuardHome_Core=0" >> ${GITHUB_ENV}
 fi
 
-# openclash分支选择
-if [[ ! "${COLLECTED_PACKAGES}" == "true" ]]; then
-  [[ -f "${HOME_PATH}/files/etc/openclash/core/clash" ]] && rm -rf ${HOME_PATH}/files/etc/openclash/core/clash
-  echo "OpenClash_Core=0" >> ${GITHUB_ENV}
-elif [[ "${COLLECTED_PACKAGES}" == "true" ]] && [[ "${OpenClash_Core}" == "1" ]]; then
-  echo "OpenClash_Core=1" >> ${GITHUB_ENV}
-else
-  echo "OpenClash_Core=0" >> ${GITHUB_ENV}
-  [[ -f "${HOME_PATH}/files/etc/openclash/core/clash" ]] && rm -rf ${HOME_PATH}/files/etc/openclash/core/clash
-fi
-if [[ ! "${COLLECTED_PACKAGES}" == "true" ]] && [[ ! "${OpenClash_branch}" == "0" ]]; then
-  OpenClash_branch="0"
-  echo "TIME r \"因没开作者收集的插件包,没OpenClash插件,对openclash的分支选择无效\"" >> ${HOME_PATH}/CHONGTU
-fi
-
-if [[ "${OpenClash_branch}" != "0" && "${OpenClash_branch}" != "dev" && "${OpenClash_branch}" != "master" ]]; then
-  if [[ "${SOURCE_CODE}" =~ (OFFICIAL|Xwrt) ]]; then
-    OpenClash_branch="dev"
-  else
-    OpenClash_branch="master"
-  fi
-fi
-
 # openclash内核
 if [[ ! "${COLLECTED_PACKAGES}" == "true" ]]; then
   [[ -f "${HOME_PATH}/files/etc/openclash/core/clash" ]] && rm -rf ${HOME_PATH}/files/etc/openclash/core/clash
