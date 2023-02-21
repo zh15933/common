@@ -1002,7 +1002,8 @@ fi
 if [[ "${Enable_IPV6_function}" == "1" ]]; then
   echo "加入IPV6功能"
   Create_Ipv6_Lan="0"
-  Disable_IPv6_option="0"
+  Enable_IPV4_function="0"
+  echo "Enable_IPV4_function=0" >> ${GITHUB_ENV}
   echo "Enable_IPV6_function=1" >> ${GITHUB_ENV}
   echo "
     uci set network.lan.ip6assign='64'
@@ -1023,7 +1024,7 @@ fi
 if [[ "${Create_Ipv6_Lan}" == "1" ]]; then
   echo "爱快+OP双系统时,爱快接管IPV6,在OP创建IPV6的lan口接收IPV6信息"
   echo "Create_Ipv6_Lan=1" >> ${GITHUB_ENV}
-  export Disable_IPv6_option="0"
+  export Enable_IPV4_function="0"
   echo "
     uci delete network.lan.ip6assign
     uci set network.lan.delegate='0'
