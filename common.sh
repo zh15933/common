@@ -264,14 +264,30 @@ cat feeds.conf.default|awk '!/^#/'|awk '!/^$/'|awk '!a[$1" "$2]++{print}' >uniq.
 mv -f uniq.conf feeds.conf.default
 
 # 这里增加了源,要对应的删除/etc/opkg/distfeeds.conf插件源
-cat >>"feeds.conf.default" <<-EOF
-src-git shidahuilang1 https://github.com/shidahuilang/openwrt-package.git;${SOURCE}
+sed -i '/makebl/d' "${HOME_PATH}/feeds.conf.default"
+sed -i '/helloworld/d' "${HOME_PATH}/feeds.conf.default"
+sed -i '/passwall/d' "${HOME_PATH}/feeds.conf.default"
+
+cat >>"${HOME_PATH}/feeds.conf.default" <<-EOF
+src-git makebl https://github.com/makebl/openwrt-package.git;${PACKAGE_BRANCH}
 EOF
-./scripts/feeds update -a
-cat >>"feeds.conf.default" <<-EOF
-src-git helloworld https://github.com/fw876/helloworld.git
-src-git passwall3 https://github.com/xiaorouji/openwrt-passwall.git;packages
+
+if [[ "$(. ${FILES_PATH}/etc/openwrt_release && echo "$DISTRIB_RECOGNIZE")" != "21" ]]; then
+cat >>"${HOME_PATH}/feeds.conf.default" <<-EOF
+src-git helloworld https://github.com/fw876/helloworld
+src-git passwall https://github.com/xiaorouji/openwrt-passwall;packages
+src-git passwall1 https://github.com/xiaorouji/openwrt-passwall;luci
+src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2;main
 EOF
+fi
+sed -i '/^#/d' "${HOME_PATH}/feeds.conf.default"
+sed -i '/^$/d' "${HOME_PATH}/feeds.conf.default"
+;;
+*)
+  echo "没有启用作者收集的插件源包"
+;;
+esac
+}
 
 
 
