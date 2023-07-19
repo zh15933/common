@@ -251,7 +251,7 @@ BRANCH_HEAD="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "${OPERATES_BUILD}" == "1" ]]; then
   rm -rf backups
 fi
-if [[ "${GIT_REPOSITORY}" =~ (shidahuilang/openwrt|shidahuilang/autobuild) ]]; then
+if [[ "${GIT_REPOSITORY}" =~ (shidahuilang/openwrt|shidahuilang/openwrt) ]]; then
   rm -rf backups
   BANBEN_SHUOMING="Update $(date +%Y.%m%d.%H%M.%S)"
 fi
