@@ -31,7 +31,6 @@ if [[ `grep -c "openwrt_x" /etc/opkg/distfeeds.conf` -ge '1' ]]; then
 	sed -i '/openwrt_x/d' /etc/opkg/distfeeds.conf
 fi
 
-
 if [[ -f "/usr/share/ucode/luci/version.uc" ]]; then
 	sed -i '/export const revision/d' "/usr/share/ucode/luci/version.uc"
 	echo "export const revision = '112233', branch = '';" >> "/usr/share/ucode/luci/version.uc"
@@ -65,3 +64,4 @@ done
 if [[ -n "$(grep "downloads.openwrt.org" /etc/opkg/distfeeds.conf)" ]]; then
 	sed -i 's?downloads.openwrt.org?mirrors.cloud.tencent.com/openwrt?g' /etc/opkg/distfeeds.conf
 fi
+
