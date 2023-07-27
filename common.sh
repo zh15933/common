@@ -626,7 +626,7 @@ if [[ "${OpenClash_branch}" == "1" ]]; then
   echo "src-git OpenClash https://github.com/vernesong/OpenClash.git;dev" >> "feeds.conf.default"
   echo "OpenClash_branch=dev" >> ${GITHUB_ENV}
 else
-  echo "src-git OpenClash https://github.com/vernesong/OpenClash.git;master" >> "feeds.conf.default"
+  echo "src-git OpenClash https://github.com/shidahuilang/openwrt-package.git;master" >> "feeds.conf.default"
   echo "OpenClash_branch=master" >> ${GITHUB_ENV}
 fi
 
@@ -690,7 +690,6 @@ luci_path="$({ find "${HOME_PATH}/feeds" |grep 'luci-openclash' |grep 'root'; } 
 if [[ -f "${luci_path}" ]] && [[ `grep -c "uci get openclash.config.enable" "${luci_path}"` -eq '0' ]]; then
   sed -i '/uci -q set openclash.config.enable=0/i\if [[ "\$(uci get openclash.config.enable)" == "0" ]] || [[ -z "\$(uci get openclash.config.enable)" ]]; then' "${luci_path}"
   sed -i '/uci -q commit openclash/a\fi' "${luci_path}"
-  sed -i '/openclash.config.enable/{N;d;}' luci-app-openclash/root/etc/uci-defaults/luci-openclash #OpenClash恢复更新系统开机自启动  
 fi
 
 if [[ "${Enable_IPV6_function}" == "1" ]]; then
