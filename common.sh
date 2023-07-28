@@ -86,6 +86,8 @@ elif [[ -n "$(echo "${INFORMATION_NOTICE}" |grep -i 'TG\|telegram')" ]]; then
   INFORMATION_NOTICE="TG"
 elif [[ -n "$(echo "${INFORMATION_NOTICE}" |grep -i 'PUSH\|pushplus')" ]]; then
   INFORMATION_NOTICE="PUSH"
+elif [[ -n "$(echo "${INFORMATION_NOTICE}" |grep -i 'WX\|WeChat')" ]]; then
+  INFORMATION_NOTICE="WX"
 else
   INFORMATION_NOTICE="false"
 fi
