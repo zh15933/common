@@ -2007,7 +2007,9 @@ else
 fi
 echo
 TIME z " 系统空间      类型   总数  已用  可用 使用率"
-df -hT $PWD
+echo "======================="
+df -hT
+echo "======================="
 echo
 echo
 
