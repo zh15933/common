@@ -301,7 +301,7 @@ COOLSNOWWOLF)
     find . -type d -name "${i}" |grep -v 'langge' |xargs -i rm -rf {}; \
   done
   if [[ "${GL_BRANCH}" == "lede" ]]; then
-    find . -type d -name "upx" -o -name "ucl" -o -name "ddns-scripts_aliyun" -o -name "ddns-scripts_dnspod" |grep 'langge' |xargs -i rm -rf {}
+    find . -type d -name "upx" -o -name "ucl" |grep 'langge' |xargs -i rm -rf {}
     find . -type d -name "r8168" -o -name "r8101" -o -name "r8125" |grep 'langge' |xargs -i rm -rf {}
     if [[ ! -f "${HOME_PATH}/target/linux/ramips/mt7621/config-5.15" ]]; then
       for i in "mt7620" "mt7621" "mt76x8" "rt288x" "rt305x" "rt3883"; do \
