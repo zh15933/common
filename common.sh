@@ -1828,7 +1828,7 @@ false)
     export Continue_selecting="0"
   fi
 ;;
-8370|8272|8171)
+7763|8370|8272|8171)
   if [[ `echo "${cpu_model}" |grep -ic "${CPU_SELECTION}"` -eq '0' ]]; then
     export chonglaixx="非${CPU_SELECTION}-重新编译"
     export chonglaiss="并非是您选择的${CPU_SELECTION}CPU"
