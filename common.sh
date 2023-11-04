@@ -575,7 +575,7 @@ if [[ "${UPDATE_FIRMWARE_ONLINE}" == "true" ]]; then
   TIME r "SSH连接固件输入命令'qinglong'可一键安装青龙和Maiark"
 fi
 TIME r ""
-TIME g "CPU性能：8370C > 8272CL > 8171M > E5系列"
+TIME g "CPU性能：7763 > 8370C > 8272CL > 8171M > E5系列"
 TIME r ""
 }
 
