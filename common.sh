@@ -70,6 +70,8 @@ fi
 
 if [[ -n "$(echo "${CPU_SELECTION}" |grep -i 'E5\|默认\|false')" ]]; then
   CPU_SELECTION="false"
+elif [[ -n "$(echo "${CPU_SELECTION}" |grep '7763')" ]]; then
+  CPU_SELECTION="7763" 
 elif [[ -n "$(echo "${CPU_SELECTION}" |grep '8370')" ]]; then
   CPU_SELECTION="8370"
 elif [[ -n "$(echo "${CPU_SELECTION}" |grep '8272')" ]]; then
