@@ -355,7 +355,7 @@ XWRT)
   s="luci-app-wrtbwmon,wrtbwmon,luci-app-dockerman,docker,dockerd,bcm27xx-userland"
   c=(${s//,/ })
   for i in ${c[@]}; do \
-    find . -type d -name "${i}" |grep -v 'langge' |xargs -i rm -rf {}; \
+    find . -type d -name "${i}" |grep -v 'dahuilang' |xargs -i rm -rf {}; \
   done
 ;;
 esac
@@ -363,13 +363,6 @@ esac
 ./scripts/feeds update passwall3 helloworld
 
 rm -rf ${HOME_PATH}/feeds/helloworld/{v2ray-core,v2ray-geodata,v2ray-plugin,xray-core,xray-plugin}
-
-if [[ "${SOURCE_CODE}" == "IMMORTALWRT" ]]; then
-  rm -rf ${HOME_PATH}/feeds/packages/net/xray-core
-  rm -rf ${HOME_PATH}/feeds/packages/net/xray-plugin
-fi
-
-
 
 function Diy_Wenjian() {
 cp -Rf ${HOME_PATH}/LICENSES/doc/uniq.conf ${HOME_PATH}/feeds.conf.default
