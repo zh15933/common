@@ -355,7 +355,7 @@ XWRT)
   s="luci-app-wrtbwmon,wrtbwmon,luci-app-dockerman,docker,dockerd,bcm27xx-userland"
   c=(${s//,/ })
   for i in ${c[@]}; do \
-    find . -type d -name "${i}" |grep -v 'dahuilang' |xargs -i rm -rf {}; \
+    find . -type d -name "${i}" |grep -v 'langge' |xargs -i rm -rf {}; \
   done
 ;;
 esac
