@@ -631,9 +631,9 @@ fi
 
 cat feeds.conf.default|awk '!/^#/'|awk '!/^$/'|awk '!a[$1" "$2]++{print}' >uniq.conf
 mv -f uniq.conf feeds.conf.default
-sed -i 's@.*langge*@#&@g' "feeds.conf.default"
+sed -i 's@.*shidahuilang*@#&@g' "feeds.conf.default"
 ./scripts/feeds update -a
-sed -i 's/^#\(.*langge\)/\1/' "feeds.conf.default"
+sed -i 's/^#\(.*shidahuilang\)/\1/' "feeds.conf.default"
 # 正在执行插件语言修改
 if [[ "${LUCI_BANBEN}" == "2" ]]; then
   cp -Rf ${HOME_PATH}/build/common/language/zh_Hans.sh ${HOME_PATH}/zh_Hans.sh
