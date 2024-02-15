@@ -1,6 +1,6 @@
 #!/bin/bash
-# https://github.com/shidahuilang/openwrt
-# common Module by shidahuilang
+# https://github.com/shidahuilang/build-actions
+# common Module by 28677160
 # matrix.target=${FOLDER_NAME}
 cd ${GITHUB_WORKSPACE}
 
@@ -20,7 +20,11 @@ fi
 function tongbu_1() {
 cd ${GITHUB_WORKSPACE}
 sudo rm -rf repogx shangyou
-git clone https://github.com/${GIT_REPOSITORY}.git repogx
+if [[ -n "${BENDI_VERSION}" ]]; then
+  git clone -b main https://github.com/${GIT_REPOSITORY}.git repogx
+else
+  git clone -b main https://user:${REPO_TOKEN}@github.com/${GIT_REPOSITORY}.git repogx
+fi
 git clone -b main --depth 1 https://github.com/shidahuilang/openwrt shangyou
 
 if [[ ! -d "repogx" ]]; then
@@ -251,7 +255,7 @@ BRANCH_HEAD="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "${OPERATES_BUILD}" == "1" ]]; then
   rm -rf backups
 fi
-if [[ "${GIT_REPOSITORY}" =~ (shidahuilang/openwrt|shidahuilang/langlang) ]]; then
+if [[ "${GIT_REPOSITORY}" =~ (shidahuilang/build-actions|shidahuilang/autobuild) ]]; then
   rm -rf backups
   BANBEN_SHUOMING="Update $(date +%Y.%m%d.%H%M.%S)"
 fi
@@ -306,7 +310,7 @@ export DIY_PART_SH="$(grep -Eo "DIY_PART_SH=.*" "common.sh" |grep '.sh' |awk 'NR
 echo "DIY_PART_SH=${DIY_PART_SH}" >> ${GITHUB_ENV}
 if [[ -n "${BENDI_VERSION}" ]]; then
   export BENDI_VERSION="1"
-  export GIT_REPOSITORY="shidahuilang/openwrt"
+  export GIT_REPOSITORY="shidahuilang/build-actions"
   sudo rm -rf build common.sh
   [[ -d "operates" ]] && cp -Rf operates build
   sed -i '/TONGBU_BENDI/d' ${GITHUB_ENV}
