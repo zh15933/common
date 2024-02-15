@@ -758,11 +758,11 @@ fi
 
 cat feeds.conf.default|awk '!/^#/'|awk '!/^$/'|awk '!a[$1" "$2]++{print}' >uniq.conf
 mv -f uniq.conf feeds.conf.default
-sed -i 's@.*dahuilang*@#&@g' "feeds.conf.default"
+sed -i 's@.*dalang*@#&@g' "feeds.conf.default"
 sed -i 's@.*src-git lienol*@#&@g' "feeds.conf.default"
 sed -i 's@.*src-git other*@#&@g' "feeds.conf.default"
 ./scripts/feeds update -a
-sed -i 's/^#\(.*dahuilang\)/\1/' "feeds.conf.default"
+sed -i 's/^#\(.*dalang\)/\1/' "feeds.conf.default"
 sed -i 's/^#\(.*src-git lienol\)/\1/' "feeds.conf.default"
 sed -i 's/^#\(.*src-git other\)/\1/' "feeds.conf.default"
 
