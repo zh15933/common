@@ -1,6 +1,6 @@
 #!/bin/bash
 # https://github.com/shidahuilang/openwrt
-# common Module by 28677160
+# common Module by shidahuilang
 # matrix.target=${FOLDER_NAME}
 cd ${GITHUB_WORKSPACE}
 
@@ -20,11 +20,7 @@ fi
 function tongbu_1() {
 cd ${GITHUB_WORKSPACE}
 sudo rm -rf repogx shangyou
-if [[ -n "${BENDI_VERSION}" ]]; then
-  git clone -b main https://github.com/${GIT_REPOSITORY}.git repogx
-else
-  git clone -b main https://user:${REPO_TOKEN}@github.com/${GIT_REPOSITORY}.git repogx
-fi
+git clone https://github.com/${GIT_REPOSITORY}.git repogx
 git clone -b main --depth 1 https://github.com/shidahuilang/openwrt shangyou
 
 if [[ ! -d "repogx" ]]; then
@@ -255,7 +251,7 @@ BRANCH_HEAD="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "${OPERATES_BUILD}" == "1" ]]; then
   rm -rf backups
 fi
-if [[ "${GIT_REPOSITORY}" =~ (shidahuilang/openwrt|shidahuilang/openwrt) ]]; then
+if [[ "${GIT_REPOSITORY}" =~ (shidahuilang/openwrt|shidahuilang/langlang) ]]; then
   rm -rf backups
   BANBEN_SHUOMING="Update $(date +%Y.%m%d.%H%M.%S)"
 fi
