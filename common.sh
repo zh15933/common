@@ -269,7 +269,7 @@ mv -f uniq.conf feeds.conf.default
 
 # 这里增加了源,要对应的删除/etc/opkg/distfeeds.conf插件源
 cat >>"feeds.conf.default" <<-EOF
-src-git langge1 https://github.com/shidahuilang/openwrt-package.git;${SOURCE}
+src-git dalang https://github.com/shidahuilang/openwrt-package.git;${SOURCE}
 EOF
 ./scripts/feeds update -a
 cat >>"feeds.conf.default" <<-EOF
@@ -292,7 +292,7 @@ luci-app-gost,gost,luci-app-smartdns,smartdns,luci-app-wizard,luci-app-msd_lite,
 luci-app-ssr-plus,*luci-app-passwall*,luci-app-vssr,lua-maxminddb,v2ray-core,v2ray-geodata,v2ray-plugin,xray-core,xray-plugin,v2raya,trojan-go,trojan-plus,trojan"
 t=(${z//,/ })
 for x in ${t[@]}; do \
-  find . -type d -name "${x}" |grep -v 'langge\|freifunk\|passwall3' |xargs -i rm -rf {}; \
+  find . -type d -name "${x}" |grep -v 'dalang\|freifunk\|passwall3' |xargs -i rm -rf {}; \
 done
 
 case "${SOURCE_CODE}" in
@@ -300,10 +300,10 @@ COOLSNOWWOLF)
   s="luci-app-netdata,netdata,luci-app-diskman,mentohust"
   c=(${s//,/ })
   for i in ${c[@]}; do \
-    find . -type d -name "${i}" |grep -v 'langge' |xargs -i rm -rf {}; \
+    find . -type d -name "${i}" |grep -v 'dalang' |xargs -i rm -rf {}; \
   done
   if [[ "${GL_BRANCH}" == "lede" ]]; then
-    find . -type d -name "upx" -o -name "ucl" |grep 'langge' |xargs -i rm -rf {}
+    find . -type d -name "upx" -o -name "ucl" |grep 'dalang' |xargs -i rm -rf {}
     find . -type d -name "r8168" -o -name "r8101" -o -name "r8125" |grep 'langge' |xargs -i rm -rf {}
     if [[ ! -f "${HOME_PATH}/target/linux/ramips/mt7621/config-5.15" ]]; then
       for i in "mt7620" "mt7621" "mt76x8" "rt288x" "rt305x" "rt3883"; do \
@@ -321,16 +321,16 @@ LIENOL)
   s="luci-app-dockerman"
   c=(${s//,/ })
   for i in ${c[@]}; do \
-    find . -type d -name "${i}" |grep -v 'langge' |xargs -i rm -rf {}; \
+    find . -type d -name "${i}" |grep -v 'dalang' |xargs -i rm -rf {}; \
   done
   find . -type d -name "mt" -o -name "pdnsd-alt" -o -name "autosamba" |grep 'other' |xargs -i rm -rf {}
   if [[ "${REPO_BRANCH}" == "master" ]]; then
     find . -type d -name "automount" |grep 'other' |xargs -i rm -rf {}
   elif [[ "${REPO_BRANCH}" =~ (19.07|19.07-test) ]]; then
-    find . -type d -name "luci-app-vssr" -o -name "lua-maxminddb" -o -name "automount" -o -name 'luci-app-unblockneteasemusic' |grep 'langge' |xargs -i rm -rf {}
+    find . -type d -name "luci-app-vssr" -o -name "lua-maxminddb" -o -name "automount" -o -name 'luci-app-unblockneteasemusic' |grep 'dalang' |xargs -i rm -rf {}
     rm -rf ${HOME_PATH}/feeds/packages/libs/libcap && cp -Rf ${HOME_PATH}/build/common/Share/libcap ${HOME_PATH}/feeds/packages/libs/libcap
   elif [[ "${REPO_BRANCH}" == "21.02" ]]; then
-    find . -type d -name "automount" |grep 'langge' |xargs -i rm -rf {}
+    find . -type d -name "automount" |grep 'dalang' |xargs -i rm -rf {}
   fi
 ;;
 IMMORTALWRT)
@@ -634,9 +634,9 @@ fi
 
 cat feeds.conf.default|awk '!/^#/'|awk '!/^$/'|awk '!a[$1" "$2]++{print}' >uniq.conf
 mv -f uniq.conf feeds.conf.default
-sed -i 's@.*langge*@#&@g' "feeds.conf.default"
+sed -i 's@.*dalang*@#&@g' "feeds.conf.default"
 ./scripts/feeds update -a
-sed -i 's/^#\(.*langge\)/\1/' "feeds.conf.default"
+sed -i 's/^#\(.*dalang\)/\1/' "feeds.conf.default"
 # 正在执行插件语言修改
 if [[ "${LUCI_BANBEN}" == "2" ]]; then
   cp -Rf ${HOME_PATH}/build/common/language/zh_Hans.sh ${HOME_PATH}/zh_Hans.sh
