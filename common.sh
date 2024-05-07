@@ -457,7 +457,7 @@ git clone https://github.com/sbwml/packages_lang_golang -b 22.x ${HOME_PATH}/fee
 
 if [[ -d "${HOME_PATH}/feeds/langge1/relevance/shadowsocks-libev" ]]; then
   rm -rf ${HOME_PATH}/feeds/packages/net/shadowsocks-libev
-  mv -f feeds/danshui1/relevance/shadowsocks-libev ${HOME_PATH}/feeds/packages/net/shadowsocks-libev
+  mv -f feeds/langge1/relevance/shadowsocks-libev ${HOME_PATH}/feeds/packages/net/shadowsocks-libev
 fi
 if [[ -d "${HOME_PATH}/feeds/langge1/relevance/kcptun" ]]; then
   rm -rf ${HOME_PATH}/feeds/packages/net/kcptun
