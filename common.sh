@@ -291,7 +291,6 @@ cat >>"feeds.conf.default" <<-EOF
 src-git langge1 https://github.com/shidahuilang/openwrt-package.git;${SOURCE}
 src-git helloworld https://github.com/fw876/helloworld.git
 src-git passwall3 https://github.com/xiaorouji/openwrt-passwall-packages;main
-src-git nezha https://github.com/Erope/openwrt_nezha;main
 EOF
 ./scripts/feeds update -a
 
