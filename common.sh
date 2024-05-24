@@ -538,8 +538,8 @@ fi
 cp -Rf ${HOME_PATH}/build/common/custom/Postapplication "${FILES_PATH}/etc/init.d/Postapplication"
 sudo chmod +x "${FILES_PATH}/etc/init.d/Postapplication"
 
-cp -Rf ${HOME_PATH}/build/common/custom/networkdetection "${FILES_PATH}/etc/networkdetection"
-sudo chmod +x "${FILES_PATH}/etc/networkdetection"
+# cp -Rf ${HOME_PATH}/build/common/custom/networkdetection "${FILES_PATH}/etc/networkdetection"
+# sudo chmod +x "${FILES_PATH}/etc/networkdetection"
 
 [[ ! -d "${FILES_PATH}/usr/bin" ]] && mkdir -p ${FILES_PATH}/usr/bin
 cp -Rf ${HOME_PATH}/build/common/custom/openwrt.sh "${FILES_PATH}/usr/bin/openwrt"
