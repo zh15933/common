@@ -326,7 +326,7 @@ LIENOL)
   s="mentohust,aliyundrive-webdav,pdnsd-alt,mt"
   c=(${s//,/ })
   for i in ${c[@]}; do \
-    find . -type d -name "${i}" |grep -v 'dahuilang              \|freifunk\|helloworld\|passwall3' |xargs -i rm -rf {}; \
+    find . -type d -name "${i}" |grep -v 'dahuilang\|freifunk\|helloworld\|passwall3' |xargs -i rm -rf {}; \
   done
   if [[ "${REPO_BRANCH}" == "19.07" ]]; then
     s="luci-app-unblockneteasemusic,luci-app-vssr,lua-maxminddb"
@@ -538,8 +538,8 @@ fi
 cp -Rf ${HOME_PATH}/build/common/custom/Postapplication "${FILES_PATH}/etc/init.d/Postapplication"
 sudo chmod +x "${FILES_PATH}/etc/init.d/Postapplication"
 
-# cp -Rf ${HOME_PATH}/build/common/custom/networkdetection "${FILES_PATH}/etc/networkdetection"
-# sudo chmod +x "${FILES_PATH}/etc/networkdetection"
+cp -Rf ${HOME_PATH}/build/common/custom/networkdetection "${FILES_PATH}/etc/networkdetection"
+sudo chmod +x "${FILES_PATH}/etc/networkdetection"
 
 [[ ! -d "${FILES_PATH}/usr/bin" ]] && mkdir -p ${FILES_PATH}/usr/bin
 cp -Rf ${HOME_PATH}/build/common/custom/openwrt.sh "${FILES_PATH}/usr/bin/openwrt"
