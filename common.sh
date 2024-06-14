@@ -177,6 +177,8 @@ OFFICIAL)
 esac
 
 export DIY_PART_SH="diy-part.sh"
+echo "GITHUB_API=zzz_api" >> $GITHUB_ENV
+echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
 echo "DIY_PART_SH=${DIY_PART_SH}" >> ${GITHUB_ENV}
 echo "HOME_PATH=${GITHUB_WORKSPACE}/openwrt" >> ${GITHUB_ENV}
 echo "SOURCE_CODE=${SOURCE_CODE}" >> ${GITHUB_ENV}
@@ -214,7 +216,7 @@ if [[ -n "${BENDI_VERSION}" ]]; then
   echo "PACKAGING_FIRMWARE_BENDI=${PACKAGING_FIRMWARE}" >> ${GITHUB_ENV}
   echo "MODIFY_CONFIGURATION=${MODIFY_CONFIGURATION}" >> ${GITHUB_ENV}
   echo "WSL_ROUTEPATH=${WSL_ROUTEPATH}" >> ${GITHUB_ENV}
-  echo "GITHUB_API=zzz_api" >> $GITHUB_ENV
+
 fi
 
 # 修改本地文件变量
