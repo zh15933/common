@@ -66,6 +66,9 @@ else
   RETAIN_MINUTE="${RETAIN_MINUTE}"
   KEEP_LATEST="${KEEP_LATEST}"
   WAREHOUSE_MAN="${GIT_REPOSITORY##*/}"
+  GITHUB_REPOSITORY="${{ github.repository }}"
+  GITHUB_ACTOR="${{ github.actor }}"
+  GITHUB_WORKFLOW="${{ github.workflow }}"
 fi
 
 if [[ -n "$(echo "${CPU_SELECTION}" |grep -i 'E5\|默认\|false')" ]]; then
