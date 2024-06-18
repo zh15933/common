@@ -66,9 +66,6 @@ else
   RETAIN_MINUTE="${RETAIN_MINUTE}"
   KEEP_LATEST="${KEEP_LATEST}"
   WAREHOUSE_MAN="${GIT_REPOSITORY##*/}"
-  GITHUB_REPOSITORY="${{ github.repository }}"
-  GITHUB_ACTOR="${{ github.actor }}"
-  GITHUB_WORKFLOW="${{ github.workflow }}"
 fi
 
 if [[ -n "$(echo "${CPU_SELECTION}" |grep -i 'E5\|默认\|false')" ]]; then
@@ -214,7 +211,6 @@ if [[ -n "${BENDI_VERSION}" ]]; then
   echo "PACKAGING_FIRMWARE_BENDI=${PACKAGING_FIRMWARE}" >> ${GITHUB_ENV}
   echo "MODIFY_CONFIGURATION=${MODIFY_CONFIGURATION}" >> ${GITHUB_ENV}
   echo "WSL_ROUTEPATH=${WSL_ROUTEPATH}" >> ${GITHUB_ENV}
-
 fi
 
 # 修改本地文件变量
