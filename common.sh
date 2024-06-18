@@ -262,6 +262,7 @@ if [[ `gcc --version |grep -c "buntu 13"` -eq '0' ]]; then
   sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
   sudo apt-get install -y gcc-13
   sudo apt-get install -y g++-13
+  sudo apt-get install -y rename
   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 60 --slave /usr/bin/g++ g++ /usr/bin/g++-13
   gcc --version
 fi
