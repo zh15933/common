@@ -667,7 +667,7 @@ if [[ -f "${HOME_PATH}/feeds/packages/multimedia/aliyundrive-webdav/Makefile" ]]
 fi
 # 降低softethervpn5版本,
   if [[ -d "${HOME_PATH}/feeds/packages/net/softethervpn5" ]]; then
-    curl -o ${HOME_PATH}/feeds/passwall3/shadowsocks-rust/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/softethervpn5/Makefile
+    curl -o ${HOME_PATH}/feeds/packages/net/softethervpn5/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/softethervpn5/Makefile
   fi
 fi
 }
