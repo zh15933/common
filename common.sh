@@ -453,6 +453,7 @@ for X in $(ls -1 "${HOME_PATH}/feeds/passwall3"); do
   find . -type d -name "${X}" |grep -v 'langge\|passwall3' |xargs -i rm -rf {}
 done
 # 更换golang版本
+rm -rf feeds/packages/net/softethervpn5
 rm -rf ${HOME_PATH}/feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 22.x ${HOME_PATH}/feeds/packages/lang/golang
 
@@ -665,10 +666,6 @@ if [[ -f "${HOME_PATH}/feeds/packages/multimedia/aliyundrive-webdav/Makefile" ]]
     curl -o ${HOME_PATH}/feeds/passwall3/shadowsocks-rust/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/shadowsocks-rust/Makefile
   fi
 fi
-# 降低softethervpn5版本,
-  if [[ -d "${HOME_PATH}/feeds/packages/net/softethervpn5" ]]; then
-    curl -o ${HOME_PATH}/feeds/packages/net/softethervpn5/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/softethervpn5/Makefile
-  fi
 }
 
 
@@ -791,6 +788,7 @@ else
 fi
 ./scripts/feeds install -a > /dev/null 2>&1
 # 使用自定义配置文件
+
 [[ -f ${BUILD_PATH}/$CONFIG_FILE ]] && mv ${BUILD_PATH}/$CONFIG_FILE .config
 }
 
