@@ -669,7 +669,6 @@ fi
   if [[ -d "${HOME_PATH}/feeds/packages/net/softethervpn5" ]]; then
     curl -o ${HOME_PATH}/feeds/packages/net/softethervpn5/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/softethervpn5/Makefile
   fi
-fi
 }
 
 
