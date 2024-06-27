@@ -455,7 +455,7 @@ done
 # 删除软件包自带插件
 rm -rf feeds/packages/net/softethervpn5
 #rm -rf feeds/packages/net/cloudflared
-
+rm -rf package/luci-app-smartdns
 # 更换golang版本
 rm -rf ${HOME_PATH}/feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 22.x ${HOME_PATH}/feeds/packages/lang/golang
