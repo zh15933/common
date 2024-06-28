@@ -824,6 +824,14 @@ else
   echo "AdGuardHome_Core=0" >> ${GITHUB_ENV}
 fi
 
+# cloudflared内核
+if [[ "${cloudflared_Core}" == "1" ]]; then
+  echo "cloudflared_Core=1" >> ${GITHUB_ENV}
+else
+  [[ -f "${HOME_PATH}/files/usr/bin/cloudflared" ]] && rm -rf ${HOME_PATH}/files/usr/bin/cloudflared
+  echo "cloudflared_Core=0" >> ${GITHUB_ENV}
+fi
+
 # openclash内核
 if [[ "${OpenClash_Core}" == "1" ]]; then
   echo "OpenClash_Core=1" >> ${GITHUB_ENV}
@@ -1404,6 +1412,10 @@ if [[ "${AdGuardHome_Core}" == "1" ]]; then
   echo -e "\nCONFIG_PACKAGE_luci-app-adguardhome=y" >> ${HOME_PATH}/.config
 fi
 
+if [[ "${cloudflared_Core}" == "1" ]]; then
+  echo -e "\nCONFIG_PACKAGE_luci-app-cloudflared=y" >> ${HOME_PATH}/.config
+fi
+
 if [[ `grep -c "CONFIG_PACKAGE_dnsmasq_full_nftset=y" ${HOME_PATH}/.config` -eq '1' ]]; then
   if [[ `grep -c "CONFIG_PACKAGE_luci-app-passwall2_Nftables_Transparent_Proxy=y" ${HOME_PATH}/.config` -eq '1' ]]; then
     sed -i 's/CONFIG_PACKAGE_dnsmasq_full_nftset=y/# CONFIG_PACKAGE_dnsmasq_full_nftset is not set/g' ${HOME_PATH}/.config
@@ -1558,52 +1570,57 @@ echo "LINUX_KERNEL=${LINUX_KERNEL}" >> ${GITHUB_ENV}
 }
 
 function Diy_adguardhome() {
-cd ${HOME_PATH}
-if [[ `grep -c "CONFIG_ARCH=\"x86_64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_amd64"
-  Archclash="linux-amd64"
-  echo "CPU架构：amd64"
-elif [[ `grep -c "CONFIG_ARCH=\"i386\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_386"
-  Archclash="linux-386"
-  echo "CPU架构：X86 32"
-elif [[ `grep -c "CONFIG_ARCH=\"aarch64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_arm64"
-  Archclash="linux-arm64"
-  echo "CPU架构：arm64"
-elif [[ `grep -c "CONFIG_arm_v7=y" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_armv7"
-  Archclash="linux-armv7"
-  echo "CPU架构：armv7"
-elif [[ `grep -c "CONFIG_ARCH=\"arm\"" ${HOME_PATH}/.config` -eq '1' ]] && [[ `grep -c "CONFIG_arm_v7=y" ${HOME_PATH}/.config` -eq '0' ]] && [[ `grep "CONFIG_TARGET_ARCH_PACKAGES" "${HOME_PATH}/.config" |grep -c "vfp"` -eq '1' ]]; then
-  Arch="linux_armv6"
-  Archclash="linux-armv6"
-  echo "CPU架构：armv6"
-elif [[ `grep -c "CONFIG_ARCH=\"arm\"" ${HOME_PATH}/.config` -eq '1' ]] && [[ `grep -c "CONFIG_arm_v7=y" ${HOME_PATH}/.config` -eq '0' ]] && [[ `grep "CONFIG_TARGET_ARCH_PACKAGES" "${HOME_PATH}/.config" |grep -c "vfp"` -eq '0' ]]; then
-  Arch="linux_armv5"
-  Archclash="linux-armv5"
-  echo "CPU架构：armv6"
-elif [[ `grep -c "CONFIG_ARCH=\"mips\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_mips_softfloat"
-  Archclash="linux-mips-softfloat"
-  echo "CPU架构：mips"
-elif [[ `grep -c "CONFIG_ARCH=\"mips64\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_mips64_softfloat"
-  Archclash="linux-mips64"
-  echo "CPU架构：mips64"
-elif [[ `grep -c "CONFIG_ARCH=\"mipsel\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_mipsle_softfloat"
-  Archclash="linux-mipsle-softfloat"
-  echo "CPU架构：mipsel"
-elif [[ `grep -c "CONFIG_ARCH=\"mips64el\"" ${HOME_PATH}/.config` -eq '1' ]]; then
-  Arch="linux_mips64le_softfloat"
-  Archclash="linux-mips64le"
-  echo "CPU架构：mips64el"
-else
-  echo "不了解您的CPU为何架构"
-  weizhicpu="1"
-fi
+  cd "${HOME_PATH}"
+  weizhicpu="0"
 
+  if grep -q 'CONFIG_ARCH="x86_64"' "${HOME_PATH}/.config"; then
+    Arch="linux_amd64"
+    Archclash="linux-amd64"
+    echo "CPU架构：amd64"
+  elif grep -q 'CONFIG_ARCH="i386"' "${HOME_PATH}/.config"; then
+    Arch="linux_386"
+    Archclash="linux-386"
+    echo "CPU架构：X86 32"
+  elif grep -q 'CONFIG_ARCH="aarch64"' "${HOME_PATH}/.config"; then
+    Arch="linux_arm64"
+    Archclash="linux-arm64"
+    echo "CPU架构：arm64"
+  elif grep -q 'CONFIG_arm_v7=y' "${HOME_PATH}/.config"; then
+    Arch="linux_armv7"
+    Archclash="linux-armv7"
+    echo "CPU架构：armv7"
+  elif grep -q 'CONFIG_ARCH="arm"' "${HOME_PATH}/.config" && ! grep -q 'CONFIG_arm_v7=y' "${HOME_PATH}/.config"; then
+    if grep -q 'vfp' <<<"$(grep 'CONFIG_TARGET_ARCH_PACKAGES' "${HOME_PATH}/.config")"; then
+      Arch="linux_armv6"
+      Archclash="linux-armv6"
+      echo "CPU架构：armv6"
+    else
+      Arch="linux_armv5"
+      Archclash="linux-armv5"
+      echo "CPU架构：armv6"
+    fi
+  elif grep -q 'CONFIG_ARCH="mips"' "${HOME_PATH}/.config"; then
+    Arch="linux_mips_softfloat"
+    Archclash="linux-mips-softfloat"
+    echo "CPU架构：mips"
+  elif grep -q 'CONFIG_ARCH="mips64"' "${HOME_PATH}/.config"; then
+    Arch="linux_mips64_softfloat"
+    Archclash="linux-mips64"
+    echo "CPU架构：mips64"
+  elif grep -q 'CONFIG_ARCH="mipsel"' "${HOME_PATH}/.config"; then
+    Arch="linux_mipsle_softfloat"
+    Archclash="linux-mipsle-softfloat"
+    echo "CPU架构：mipsel"
+  elif grep -q 'CONFIG_ARCH="mips64el"' "${HOME_PATH}/.config"; then
+    Arch="linux_mips64le_softfloat"
+    Archclash="linux-mips64le"
+    echo "CPU架构：mips64el"
+  else
+    echo "不了解您的CPU为何架构"
+    weizhicpu="1"
+  fi
+
+# OpenClash内核下载
 if [[ ! "${weizhicpu}" == "1" ]] && [[ -n "${OpenClash_Core}" ]] && [[ "${OpenClash_branch}" =~ (master|dev) ]]; then
   echo "正在执行：给openclash下载核心"
   rm -rf ${HOME_PATH}/files/etc/openclash/core
@@ -1664,11 +1681,12 @@ if [[ ! "${weizhicpu}" == "1" ]] && [[ -n "${OpenClash_Core}" ]] && [[ "${OpenCl
   rm -rf ${HOME_PATH}/clash-neihe
 fi
 
+# AdGuardHome内核下载
 if [[ ! "${weizhicpu}" == "1" ]] && [[ "${AdGuardHome_Core}" == "1" ]]; then
   echo "正在执行：给adguardhome下载核心"
-  rm -rf ${HOME_PATH}/AdGuardHome && rm -rf ${HOME_PATH}/files/usr/bin
+  rm -rf ${HOME_PATH}/AdGuardHome && rm -rf ${HOME_PATH}/files/usr/bin/AdGuardHome
   wget -q https://github.com/shidahuilang/common/releases/download/API/AdGuardHome.api -O AdGuardHome.api
-  if [[ $? -ne 0 ]];then
+  if [[ $? -ne 0 ]]; then
     curl -fsSL https://github.com/shidahuilang/common/releases/download/API/AdGuardHome.api -o AdGuardHome.api
   fi
   latest_ver="$(grep -E 'tag_name' 'AdGuardHome.api' |grep -E 'v[0-9.]+' -o 2>/dev/null)"
@@ -1688,7 +1706,24 @@ if [[ ! "${weizhicpu}" == "1" ]] && [[ "${AdGuardHome_Core}" == "1" ]]; then
   else
     echo "增加AdGuardHome核心失败"
   fi
-    rm -rf ${HOME_PATH}/{AdGuardHome_${Arch}.tar.gz,AdGuardHome}
+  rm -rf ${HOME_PATH}/{AdGuardHome_${Arch}.tar.gz,AdGuardHome}
+fi
+
+# cloudflared内核下载
+if [[ ! "${weizhicpu}" == "1" ]] && [[ "${cloudflared_Core}" == "1" ]]; then
+  echo "正在执行：给cloudflared下载核心"
+  wget -q https://github.com/cloudflare/cloudflared/releases/download/2024.6.1/cloudflared-linux-amd64 -O cloudflared
+  if [[ $? -ne 0 ]]; then
+    echo "cloudflared 下载失败，尝试使用备用链接"
+    curl -fsSL https://github.com/cloudflare/cloudflared/releases/download/2024.6.1/cloudflared-linux-amd64 -o cloudflared
+  fi
+  if [[ -f "cloudflared" ]]; then
+    mv -f cloudflared ${HOME_PATH}/files/usr/bin/
+    sudo chmod +x ${HOME_PATH}/files/usr/bin/cloudflared
+    echo "增加cloudflared核心完成"
+  else
+    echo "增加cloudflared核心失败"
+  fi
 fi
 }
 
