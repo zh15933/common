@@ -738,11 +738,7 @@ if [[ "${REPO_BRANCH}" =~ (openwrt-19.07|openwrt-21.02|openwrt-22.03) ]]; then
   if [[ -d "${HOME_PATH}/feeds/passwall3/shadowsocksr-libev" ]]; then
     curl -o ${HOME_PATH}/feeds/passwall3/shadowsocksr-libev/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/shadowsocksr-libev/Makefile
   fi
-  # 降低shadowsocks-rust版本,最新版本编译不成功
-  if [[ -d "${HOME_PATH}/feeds/passwall3/shadowsocks-rust" ]]; then
-    curl -o ${HOME_PATH}/feeds/passwall3/shadowsocks-rust/Makefile https://raw.githubusercontent.com/shidahuilang/common/main/Share/shadowsocks-rust/Makefile
-  fi
-fi
+
 }
 
 
