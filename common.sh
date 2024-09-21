@@ -1638,19 +1638,19 @@ if [[ ! "${weizhicpu}" == "1" ]] && [[ -n "${OpenClash_Core}" ]] && [[ "${OpenCl
   cd ${HOME_PATH}/clash-neihe
   if [[ "${OpenClash_Core}" == "2" ]]; then
     wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/meta/clash-${Archclash}.tar.gz -O meta.tar.gz
-    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/dev/clash-${Archclash}.tar.gz -O clash.tar.gz
+    # wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/dev/clash-${Archclash}.tar.gz -O clash.tar.gz
     wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/core_version -O core_version
-    TUN="$(cat core_version |grep -v "^v\|^V\|^a" |grep -E "[0-9]+.[0-9]+.[0-9]+")"
-    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/premium/clash-${Archclash}-${TUN}.gz -O clash_tun.gz
+   # TUN="$(cat core_version |grep -v "^v\|^V\|^a" |grep -E "[0-9]+.[0-9]+.[0-9]+")"
+   # wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/premium/clash-${Archclash}-${TUN}.gz -O clash_tun.gz
     
-    tar -zxvf clash.tar.gz -O > clash
-    if [[ $? -eq 0 ]];then
-      mv -f ${HOME_PATH}/clash-neihe/clash ${HOME_PATH}/files/etc/openclash/core/clash
-      sudo chmod +x ${HOME_PATH}/files/etc/openclash/core/clash
-      echo "OpenClash增加dev内核成功"
-    else
-      echo "OpenClash增加dev内核失败"
-    fi
+   # tar -zxvf clash.tar.gz -O > clash
+   # if [[ $? -eq 0 ]];then
+   #   mv -f ${HOME_PATH}/clash-neihe/clash ${HOME_PATH}/files/etc/openclash/core/clash
+   #   sudo chmod +x ${HOME_PATH}/files/etc/openclash/core/clash
+   #   echo "OpenClash增加dev内核成功"
+   # else
+   #   echo "OpenClash增加dev内核失败"
+   # fi
     tar -zxvf meta.tar.gz -O > clash_meta
     if [[ $? -eq 0 ]];then
       mv -f ${HOME_PATH}/clash-neihe/clash_meta ${HOME_PATH}/files/etc/openclash/core/clash_meta
@@ -1659,17 +1659,17 @@ if [[ ! "${weizhicpu}" == "1" ]] && [[ -n "${OpenClash_Core}" ]] && [[ "${OpenCl
     else
       echo "OpenClash增加meta内核失败"
     fi
-    gzip -d clash_tun.gz
-    if [[ $? -eq 0 ]];then
-      mv -f ${HOME_PATH}/clash-neihe/clash_tun ${HOME_PATH}/files/etc/openclash/core/clash_tun
-      sudo chmod +x ${HOME_PATH}/files/etc/openclash/core/clash_tun
-      echo "clash"
-      echo "OpenClash增加tun内核成功"
-    else
-      echo "OpenClash增加tun内核失败"
-    fi
+  #  gzip -d clash_tun.gz
+  #  if [[ $? -eq 0 ]];then
+  #    mv -f ${HOME_PATH}/clash-neihe/clash_tun ${HOME_PATH}/files/etc/openclash/core/clash_tun
+  #    sudo chmod +x ${HOME_PATH}/files/etc/openclash/core/clash_tun
+  #    echo "clash"
+  #    echo "OpenClash增加tun内核成功"
+  #  else
+  #    echo "OpenClash增加tun内核失败"
+  #  fi
   elif [[ "${OpenClash_Core}" == "1" ]]; then
-    wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/dev/clash-${Archclash}.tar.gz
+  #  wget -q https://raw.githubusercontent.com/vernesong/OpenClash/core/${OpenClash_branch}/dev/clash-${Archclash}.tar.gz
     if [[ $? -ne 0 ]];then
       wget -q https://github.com/vernesong/OpenClash/releases/download/Clash/clash-${Archclash}.tar.gz
     else
