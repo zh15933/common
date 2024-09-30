@@ -25,7 +25,7 @@ function Diy_Part2() {
 	export Github_API2="https://github.com/${GIT_REPOSITORY}/releases/download/${Update_tag}/zzz_api"
 	export API_PATH="/tmp/Downloads/zzz_api"
 	export Release_download1="${GITHUB_LINK}/releases/download/${Update_tag}"
-	export Release_download2="${GITHUB_LINK}/releases/download/${Update_tag}"
+	export Release_download2="https://ghp.ci/${GITHUB_LINK}/releases/download/${Update_tag}"
 	export Github_Release="${GITHUB_LINK}/releases/tag/${Update_tag}"
 	
 	if [[ "${TARGET_PROFILE}" =~ (phicomm_k3|phicomm-k3) ]]; then
